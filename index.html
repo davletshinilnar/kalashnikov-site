@@ -1,80 +1,572 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Владислав Калашников — Баритон</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: Georgia, serif; margin:0; padding:0; background:#fafafa; color:#333; line-height:1.6; }
-    header { background: linear-gradient(135deg, #7a0c1f, #c99b4a); color:white; text-align:center; padding:3rem 1rem; }
-    header h1 { margin:0; font-size:2.5rem; }
-    nav { display:flex; justify-content:center; gap:1.5rem; background:#600a18; flex-wrap:wrap; padding:0.7rem; }
-    nav a { color:white; text-decoration:none; font-weight:bold; transition:color 0.3s; }
-    nav a:hover { color:#ffd27f; }
-    section { max-width:1000px; margin:2rem auto; padding:1rem; background:white; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
-    h2 { border-bottom:2px solid #7a0c1f; padding-bottom:0.5rem; margin-bottom:1rem; color:#600a18; }
-    .bio { text-align:justify; }
-    .repertoire ul { padding-left:1.5rem; }
-    .repertoire li { margin-bottom:0.3rem; }
-    .audio-player { display:flex; flex-direction:column; gap:1rem; }
-    audio { width:100%; }
-    .gallery { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1rem; }
-    .gallery img { width:100%; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:transform 0.3s; }
-    .gallery img:hover { transform:scale(1.05); }
-    footer { text-align:center; padding:1rem; background:#600a18; color:white; margin-top:2rem; }
-    @media(max-width:768px){ header h1{font-size:2rem;} nav{gap:1rem;} }
-    @media(max-width:480px){ header{padding:2rem 1rem;} header h1{font-size:1.5rem;} section{margin:1rem; padding:0.8rem;} }
+    :root{
+      --beige: #f3e9dd;       /* чуть ярче бежевый */
+      --light-beige: #fbf6f2;
+      --brown: #5a3029;       /* усиленный коричневый */
+      --dark-brown: #3b2722;
+      --bordo: #7b0f1a;
+      --muted: #89776f;
+      --white: #ffffff;
+      --max-width: 1160px;
+      --radius: 10px;
+      --transition: 0.25s ease;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;padding:0}
+    body{
+      font-family:"Roboto",system-ui,-apple-system,"Segoe UI",Arial;
+      background:var(--light-beige);
+      color:var(--dark-brown);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+    }
+
+    .site{max-width:var(--max-width);margin:0 auto;padding:20px}
+
+    /* Header */
+    header.main-header{display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:10}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:72px;height:72px;border-radius:8px;overflow:hidden;background:#ddd;flex:0 0 72px}
+    .brand h1{font-family:"Playfair Display",serif;font-size:22px;margin:0;color:var(--brown)}
+    .brand p{margin:0;font-size:13px;color:var(--muted)}
+
+    nav.topnav{display:flex;gap:18px;align-items:center}
+    nav.topnav a{text-decoration:none;color:var(--brown);font-weight:500;padding:8px 10px;border-radius:6px;transition:background var(--transition),color var(--transition)}
+    nav.topnav a:hover{background:rgba(0,0,0,0.04)}
+    nav.topnav a.active{color:var(--bordo);font-weight:700}
+
+    .burger{display:none;width:44px;height:44px;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(0,0,0,0.06);background:var(--white)}
+    .burger div{width:20px;height:2px;background:var(--dark-brown);position:relative}
+    .burger div::before,.burger div::after{content:"";position:absolute;left:0;width:20px;height:2px;background:var(--dark-brown)}
+    .burger div::before{top:-6px}.burger div::after{top:6px}
+
+    /* Mobile menu panel */
+    .mobile-menu{position:fixed;inset:0;background:rgba(0,0,0,0.36);display:none;z-index:60}
+    .mobile-menu .menu-panel{width:280px;background:var(--white);height:100%;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+    .mobile-menu nav a{display:block;padding:12px 8px;border-radius:6px;color:var(--brown);text-decoration:none}
+    .mobile-menu nav a.active{color:var(--bordo);font-weight:700}
+    /* mobile menu items offset (10px down) applied via margin-top in media query */
+
+    /* Hero */
+    .hero{margin-top:20px;border-radius:var(--radius);overflow:hidden;position:relative;min-height:320px;background-size:cover;background-position:center;display:flex;align-items:center;color:var(--white)}
+    .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,6,7,0.36), rgba(11,6,7,0.46));z-index:1}
+    .hero .hero-inner{position:relative;z-index:2;display:flex;gap:24px;align-items:center;padding:36px;width:100%}
+    .hero h2{margin:0;font-family:"Playfair Display",serif;font-size:34px;letter-spacing:0.3px;color:var(--white)}
+    .hero p.lead{margin-top:12px;font-size:18px;color:#f6eae4;opacity:0.98}
+    .cta{display:inline-block;margin-top:16px;padding:10px 16px;border-radius:8px;background:var(--bordo);color:var(--white);text-decoration:none;font-weight:600}
+
+    /* Layout */
+    .columns{display:grid;grid-template-columns:1fr 340px;gap:28px;margin-top:28px}
+    @media (max-width:980px){.columns{grid-template-columns:1fr;gap:18px}}
+
+    section.card{background:var(--white);border-radius:var(--radius);padding:20px;box-shadow:0 6px 18px rgba(27,18,15,0.06)}
+    .section-title{display:block;font-family:"Playfair Display",serif;font-size:20px;color:var(--dark-brown);margin-bottom:12px}
+    .meta{color:var(--muted);font-size:13px;margin-bottom:10px}
+
+    /* Biography styling */
+    .bio .highlight{font-weight:700;color:var(--brown)}
+    .bio .date{font-weight:600;color:var(--bordo)}
+    .bio p{margin:0 0 12px 0;color:var(--dark-brown)}
+    .bio ul{padding-left:18px;margin:8px 0}
+
+    /* Albums slider */
+    .albums-slider{position:relative;overflow:hidden;margin-top:10px}
+    .slides{display:flex;transition:transform 0.5s ease}
+    .slide{min-width:220px;margin-right:14px;background:var(--beige);border-radius:10px;overflow:hidden;flex-shrink:0;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,0.06)}
+    .slide .cover{width:100%;height:220px;background:#e6d9cc center/cover no-repeat}
+    .alb-title{padding:10px;font-family:"Playfair Display",serif;font-size:15px;color:var(--dark-brown);background:var(--white)}
+    .slider-controls{text-align:center;margin-top:12px}
+    .slider-btn{display:inline-block;padding:8px 12px;margin:0 6px;border:1px solid var(--brown);background:var(--white);color:var(--brown);cursor:pointer;border-radius:6px}
+    .slider-btn:hover{background:var(--brown);color:var(--white)}
+
+    /* Audio player (custom + native) */
+    .player{display:flex;flex-direction:column;gap:12px}
+    .player-controls{display:flex;gap:8px;align-items:center}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--white);cursor:pointer}
+    .btn.primary{background:var(--bordo);color:var(--white);border:none}
+    .progress{appearance:none;width:100%;height:8px;border-radius:8px;background:#eee}
+    .time{font-size:13px;color:var(--muted);min-width:70px;text-align:right}
+    .track-list{list-style:none;padding:0;margin:0;border-top:1px solid #f0eaea}
+    .track-list li{display:flex;gap:12px;align-items:center;padding:12px;border-bottom:1px solid #f3efec;cursor:pointer}
+    .track-list li:hover{background:#fbf6f4}
+    .track-list li.active{background:linear-gradient(90deg, rgba(123,15,26,0.06), transparent)}
+    .track-cover{width:56px;height:56px;border-radius:6px;background:#ddd center/cover no-repeat;flex:0 0 56px}
+    .track-info .title{font-weight:600;color:var(--dark-brown)}
+    .track-info .small{font-size:13px;color:var(--muted)}
+
+    /* Gallery */
+    .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .gallery-grid img{width:100%;height:110px;object-fit:cover;border-radius:8px}
+
+    /* Repertoire table */
+    .rep-table{width:100%;border-collapse:collapse;margin-top:10px}
+    .rep-table th,.rep-table td{padding:8px 10px;border-bottom:1px solid #f0e0d9;text-align:left;vertical-align:top}
+    .composer{color:var(--bordo);font-weight:700;width:160px}
+    .work{font-weight:600}
+    .role{color:var(--muted)}
+
+    /* Sidebar */
+    .profile-photo{width:100%;height:320px;border-radius:8px;background:#eee center/cover no-repeat;margin-bottom:14px}
+    .contact-card{padding:14px;border-radius:8px;background:linear-gradient(180deg,var(--beige),var(--light-beige))}
+    .contact-card p{margin:8px 0;color:var(--dark-brown)}
+
+    footer{text-align:center;color:var(--muted);margin:36px 0 80px 0}
+
+    /* Responsive */
+    @media (max-width:980px){
+      nav.topnav{display:none}
+      .burger{display:flex}
+      .hero{min-height:260px}
+      .gallery-grid{grid-template-columns:repeat(2,1fr)}
+      .profile-photo{height:220px}
+      /* mobile menu items: опустить на 10px (gap handled) */
+      .mobile-menu .menu-panel nav a{margin-top:10px}
+    }
+    @media (max-width:520px){
+      .hero .hero-inner{flex-direction:column;align-items:flex-start;padding:20px}
+      .brand h1{font-size:18px}
+      .slide{min-width:180px}
+      .gallery-grid img{height:90px}
+      .rep-table th,.rep-table td{padding:6px}
+    }
+
   </style>
 </head>
 <body>
-<header>
-  <h1>Владислав Калашников — Баритон</h1>
-</header>
-<nav>
-  <a href="#bio">Биография</a>
-  <a href="#repertoire">Репертуар</a>
-  <a href="#audio">Аудиозаписи</a>
-  <a href="#gallery">Фотогалерея</a>
-</nav>
-<section id="bio">
-  <h2>Биография</h2>
-  <div class="bio">
-    <p>АВТОБИОГРАФИЯ:</p>
-    <p>Путь в искусстве певца, баритона Владислава Калашникова — это пример стремительного творческого взлёта... (сюда вставляется полный текст)</p>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
+    <div class="menu-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <div>
+          <h3 style="margin:0;font-family:Playfair Display">Владислав Калашников</h3>
+          <div style="font-size:13px;color:var(--muted)">Баритон</div>
+        </div>
+        <button id="closeMobile" class="btn" aria-label="Закрыть меню">✕</button>
+      </div>
+      <nav style="display:flex;flex-direction:column">
+        <a href="#home" data-link class="active">Главная</a>
+        <a href="#bio" data-link>Биография</a>
+        <a href="#albums" data-link>Альбомы</a>
+        <a href="#audio" data-link>Аудиозаписи</a>
+        <a href="#photos" data-link>Фотоальбом</a>
+        <a href="#repertoire" data-link>Репертуар</a>
+        <a href="#contacts" data-link>Контакты</a>
+      </nav>
+    </div>
   </div>
-</section>
-<section id="repertoire" class="repertoire">
-  <h2>Репертуар</h2>
-  <ul>
-    <li>Д. Верди — «Риголетто» (Риголетто), «Трубадур» (Граф ди Луна), «Аида» (Амонаро)...</li>
-    <li>Д. Пуччини — «Тоска» (Скарпиа), «Чио-Чио-сан» (Шарплес)</li>
-    <li>Д. Россини — «Севильский цирюльник» (Фигаро)</li>
-    <li>...и другие</li>
-  </ul>
-</section>
-<section id="audio">
-  <h2>Аудиозаписи</h2>
-  <div class="audio-player">
-    <p>🎵 Ария Риголетто</p>
-    <audio controls>
-      <source src="audio/sample1.mp3" type="audio/mpeg">
-    </audio>
-    <p>🎵 Ария Онегина</p>
-    <audio controls>
-      <source src="audio/sample2.mp3" type="audio/mpeg">
-    </audio>
+
+  <div class="site">
+    <header class="main-header">
+      <div class="brand">
+        <div class="logo" style="background-image:url('photo1.jpg');background-size:cover;background-position:center"></div>
+        <div>
+          <h1>Владислав Калашников</h1>
+          <p>Баритон</p>
+        </div>
+      </div>
+
+      <nav class="topnav" aria-label="Главное меню">
+        <a href="#home" class="active" data-link>Главная</a>
+        <a href="#bio" data-link>Биография</a>
+        <a href="#albums" data-link>Альбомы</a>
+        <a href="#audio" data-link>Аудиозаписи</a>
+        <a href="#photos" data-link>Фотоальбом</a>
+        <a href="#repertoire" data-link>Репертуар</a>
+        <a href="#contacts" data-link>Контакты</a>
+      </nav>
+
+      <button id="burger" class="burger" aria-label="Открыть меню"><div></div></button>
+    </header>
+
+    <!-- HERO (replace bg.jpg with your photo) -->
+    <section id="home" class="hero" style="background-image:url('bg.jpg')">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <h2>Владислав Калашников — <span style="background:rgba(0,0,0,0.16);padding:3px 8px;border-radius:6px;color:var(--beige)">Баритон</span></h2>
+          <p class="lead"><strong>Путь в искусстве певца, баритона Владислава Калашникова</strong> — это пример стремительного творческого взлёта человека, сначала посвятившего себя другой профессии, а теперь уже ярко и плодотворно служащего оперному искусству, создавая один вдохновенный образ за другим.</p>
+          <a class="cta" href="#audio">Послушать записи</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="columns">
+      <main>
+        <!-- Биография (вставлен текст полностью, аккуратно оформлен) -->
+        <section id="bio" class="card bio" aria-labelledby="bioTitle">
+          <span id="bioTitle" class="section-title">Биография / Автобиография</span>
+
+          <p class="meta">Краткая автобиография и ключевые факты</p>
+
+          <p><span class="highlight">Путь в искусстве певца, баритона Владислава Калашникова</span> — это пример стремительного творческого взлёта человека, сначала посвятившего себя другой профессии, а теперь уже ярко и плодотворно служащего оперному искусству, создавая один вдохновенный образ за другим.</p>
+
+          <p><strong class="date">Родился:</strong> Владислав Михайлович Калашников — <strong>13 января 1951</strong>, село Новокиевский Увал, Амурская область.</p>
+
+          <p>Будучи в зрелом возрасте, имея за плечами более чем 10-летний опыт инженерной профессии, в <strong class="date">1979</strong> году поступает в Благовещенское музыкальное училище и экстерном заканчивает его в <strong class="date">1982</strong> году по классу заслуженного артиста РСФСР Валерия Александровича Побережского.</p>
+
+          <p>В том же <strong class="date">1982</strong> году поступил в Горьковскую государственную консерваторию в класс заслуженного деятеля искусств РСФСР, профессора Евгения Григорьевича Крестинского и успешно окончил её в <strong class="date">1987</strong> году. В консерваторской оперной студии исполнял заглавные партии: <em>Дон Жуан (Моцарт), Дон Паскуале (Доницетти), Мазепа (Чайковский), "Грязной" (из "Царской невесты" Римского-Корсакова), Васков (из "Зори здесь тихие" Молчанова)</em>. В камерном классе исполнял вокальные циклы Мусоргского, Шумана и др.</p>
+
+          <p>Ещё учась на 4 курсе, в <strong class="date">1986</strong> г. дебютировал на сцене театра оперы и балета столицы Марийской АССР (г. Йошкар-Ола) в партии Жермона («Травиата»). Плодотворно работал в этом театре вплоть до <strong class="date">2004</strong> года, создав галерею партий ведущего баритонового репертуара: Риголетто, Фигаро, Онегин, Грязной, Князь Игорь, Жермон, Роберт, Альфио, Валентин, Алеко и др.</p>
+
+          <p>С <strong class="date">1996</strong> года начал сотрудничество с Волгоградской оперной антрепризой (худ. рук. и гл. дирижёр — з. д. и. РСФСР Вадим Венедиктов), где исполнил партию Скарпиа в «Тоске» Пуччини. В <strong class="date">2000</strong> году дебютировал в партии Риголетто на сцене Волгоградского музыкального театра.</p>
+
+          <p>Гастролировал в городах: Москва (сцена ЦДРИ), Новосибирск (Онегин), Казань (Фигаро, Елецкий), Чебоксары, Киров, Улан-Удэ и др. Частый гость на Марийском телевидении; в <strong class="date">2002</strong> году выпущена 2-серийная телепередача с исполнением шедевров мировой оперной классики.</p>
+
+          <p>В <strong class="date">2002</strong> году записал первый сольный CD-альбом популярных арий «<strong>Снова туда, где море огней</strong>» с оркестром театра оперы и балета Республики Марий Эл (дирижёр — Константин Салтыков). В том же году удостоен почётного звания <strong>«Заслуженный артист Республики Марий Эл»</strong>.</p>
+
+          <p>Активно занимается педагогической деятельностью: продолжатель «Школы Крестинского», педагог-репетитор вокала в театре оперы и балета Республики Марий Эл (1992–2002), преподавал в колледже культуры, имеет много учеников.</p>
+
+          <p>В <strong class="date">2004</strong> принят в труппу Бурятского академического театра оперы и балета (г. Улан-Удэ). За полтора сезона 2004–2005 гг. исполнил множество ведущих партий: Фигаро, Риголетто, Онегин, Роберт, Жермон; дебютировал в партиях: Граф ди Луна («Трубадур»), Князь Елецкий («Пиковая дама»), Эскамильо («Кармен»), Верховный жрец («Самсон и Далила»), Веденецкий гость («Садко»).</p>
+
+          <p>В 2004–2005 гг. в театре состоялись оперные премьеры, где он исполнял главные партии: Дон Паскуале (Доницетти), Васков (Молчанова, «Зори здесь тихие»), Кум («Сорочинская ярмарка»).</p>
+
+          <p>Гастролировал с сольным концертом «Поклонимся великим тем годам», выступал совместно с Людмилой Куделиной. В <strong class="date">2005</strong> году дал мастер-класс в Иркутском музыкальном училище и записал второй сольный CD-альбом «<strong>Non ti scordar di me…</strong>».</p>
+        </section>
+
+        <!-- Альбомы -->
+        <section id="albums" class="card" aria-labelledby="albumsTitle">
+          <span id="albumsTitle" class="section-title">Альбомы</span>
+          <div class="meta">Сольные CD-альбомы и записи</div>
+
+          <div class="albums-slider" id="albumsSlider" aria-hidden="false">
+            <div class="slides" id="slidesRow">
+              <!-- Slide 1 (заглушка cover) -->
+              <div class="slide">
+                <div class="cover" style="background-image:url('cover1.jpg')"></div>
+                <div class="alb-title">Снова туда, где море огней (2002)</div>
+              </div>
+
+              <!-- Slide 2 -->
+              <div class="slide">
+                <div class="cover" style="background-image:url('cover2.jpg')"></div>
+                <div class="alb-title">Non ti scordar di me… (2005)</div>
+              </div>
+
+              <!-- Example additional placeholder slide -->
+              <div class="slide">
+                <div class="cover" style="background-image:url('cover-placeholder.jpg')"></div>
+                <div class="alb-title">Альбом / Запись — заглушка</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slider-controls" aria-hidden="false">
+            <button id="albPrev" class="slider-btn" aria-label="Назад">‹</button>
+            <button id="albNext" class="slider-btn" aria-label="Вперёд">›</button>
+          </div>
+
+          <p style="margin-top:12px;color:var(--muted);font-size:14px">
+            <strong>Информация по альбомам:</strong><br>
+            <em>2002</em> — первый сольный CD «Снова туда, где море огней» (оркестр театра оперы и балета Республики Марий Эл; дирижёр — Константин Салтыков).<br>
+            <em>2005</em> — второй сольный CD «Non ti scordar di me…».
+          </p>
+        </section>
+
+        <!-- Аудиозаписи -->
+        <section id="audio" class="card" aria-labelledby="audioTitle">
+          <span id="audioTitle" class="section-title">Аудиозаписи</span>
+          <div class="meta">Плейлист — кликайте по треку для воспроизведения</div>
+
+          <div class="player" role="region" aria-label="Аудиоплеер">
+            <div class="player-controls">
+              <button id="prevBtn" class="btn" aria-label="Предыдущий трек">⏮</button>
+              <button id="playBtn" class="btn primary" aria-label="Воспроизвести">▶︎</button>
+              <button id="nextBtn" class="btn" aria-label="Следующий трек">⏭</button>
+              <div style="flex:1;margin-left:8px">
+                <input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="Прогресс">
+              </div>
+              <div class="time" id="time">00:00 / 00:00</div>
+            </div>
+
+            <!-- Нативный аудио элемент -->
+            <audio id="audioNative" preload="metadata"></audio>
+
+            <ul id="trackList" class="track-list" aria-label="Плейлист">
+              <li class="active" data-src="audio1.mp3" data-title="Снова туда, где море огней">
+                <div class="track-cover" style="background-image:url('cover1.jpg')"></div>
+                <div class="track-info">
+                  <div class="title">Снова туда, где море огней</div>
+                  <div class="small">2002 — популярные арии</div>
+                </div>
+              </li>
+              <li data-src="audio2.mp3" data-title="Non ti scordar di me">
+                <div class="track-cover" style="background-image:url('cover2.jpg')"></div>
+                <div class="track-info">
+                  <div class="title">Non ti scordar di me</div>
+                  <div class="small">2005 — арии и романсы</div>
+                </div>
+              </li>
+              <li data-src="audio3.mp3" data-title="Ария (Дон Паскуале)">
+                <div class="track-cover" style="background-image:url('cover-placeholder.jpg')"></div>
+                <div class="track-info">
+                  <div class="title">Ария (Дон Паскуале)</div>
+                  <div class="small">Живая запись / концерт</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Фотоальбом -->
+        <section id="photos" class="card" aria-labelledby="photosTitle">
+          <span id="photosTitle" class="section-title">Фотоальбом</span>
+          <div class="meta">Подборка сценических и рекламных фото</div>
+          <div class="gallery-grid" style="margin-top:12px">
+            <img src="photo1.jpg" alt="Фото 1">
+            <img src="photo2.jpg" alt="Фото 2">
+            <img src="photo3.jpg" alt="Фото 3">
+            <img src="photo4.jpg" alt="Фото 4">
+            <img src="photo5.jpg" alt="Фото 5">
+            <img src="photo6.jpg" alt="Фото 6">
+          </div>
+        </section>
+
+        <!-- Репертуар (по присланному изображению) -->
+        <section id="repertoire" class="card" aria-labelledby="repTitle">
+          <span id="repTitle" class="section-title">Репертуар</span>
+          <div class="meta">Избранные партии и роли</div>
+
+          <table class="rep-table" aria-label="Таблица репертуара">
+            <thead>
+              <tr><th class="composer">Автор / Композитор</th><th>Произведение</th><th>Роль</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Риголетто»</td><td class="role">Риголетто</td></tr>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Трубадур»</td><td class="role">Граф ди Луна</td></tr>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Аида»</td><td class="role">Амонaсро</td></tr>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Травиата»</td><td class="role">Жермон</td></tr>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Бал-маскарад»</td><td class="role">Ренато</td></tr>
+
+              <tr><td class="composer">Д. Пуччини</td><td class="work">«Тоска»</td><td class="role">Скарпиа</td></tr>
+              <tr><td class="composer">Д. Пуччини</td><td class="work">«Мадам Баттерфлай»</td><td class="role">Шарплес</td></tr>
+
+              <tr><td class="composer">Д. Россини</td><td class="work">«Севильский цирюльник»</td><td class="role">Фигаро</td></tr>
+
+              <tr><td class="composer">Г. Доницетти</td><td class="work">«Дон Паскуале»</td><td class="role">Дон Паскуале</td></tr>
+
+              <tr><td class="composer">Ш. Гуно</td><td class="work">«Фауст»</td><td class="role">Валентин</td></tr>
+
+              <tr><td class="composer">Ж. Бизе</td><td class="work">«Кармен»</td><td class="role">Эскамильо</td></tr>
+
+              <tr><td class="composer">Р. Леонкавалло</td><td class="work">«Паяцы»</td><td class="role">Тонио</td></tr>
+
+              <tr><td class="composer">К. Сен-Санс</td><td class="work">«Самсон и Далила»</td><td class="role">Верховный Жрец</td></tr>
+
+              <tr><td class="composer">П. Масканьи</td><td class="work">«Сельская честь»</td><td class="role">Альфио</td></tr>
+
+              <tr><td class="composer">П. Чайковский</td><td class="work">«Евгений Онегин»</td><td class="role">Онегин</td></tr>
+              <tr><td class="composer">П. Чайковский</td><td class="work">«Иоланта»</td><td class="role">Роберт Эбн-Хаккия</td></tr>
+              <tr><td class="composer">П. Чайковский</td><td class="work">«Пиковая дама»</td><td class="role">Елецкий / Томский</td></tr>
+
+              <tr><td class="composer">Н. Римский-Корсаков</td><td class="work">«Царская невеста»</td><td class="role">Грязной</td></tr>
+              <tr><td class="composer">Н. Римский-Корсаков</td><td class="work">«Садко»</td><td class="role">Веденецкий гость</td></tr>
+
+              <tr><td class="composer">М. Мусоргский</td><td class="work">«Борис Годунов»</td><td class="role">Щелкалов</td></tr>
+              <tr><td class="composer">М. Мусоргский</td><td class="work">«Сорочинская ярмарка»</td><td class="role">Кум</td></tr>
+
+              <tr><td class="composer">А. Бородин</td><td class="work">«Князь Игорь»</td><td class="role">Князь Игорь</td></tr>
+
+              <tr><td class="composer">С. Рахманинов</td><td class="work">«Алеко»</td><td class="role">Алеко</td></tr>
+
+              <tr><td class="composer">К. Молчанов</td><td class="work">«Зори здесь тихие»</td><td class="role">Васков</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="profile card" style="padding:0;overflow:hidden">
+          <div class="profile-photo" style="background-image:url('photo1.jpg')"></div>
+          <div style="padding:16px">
+            <div style="font-weight:700;font-family:Playfair Display">Владислав Калашников</div>
+            <div style="color:var(--muted);font-size:14px;margin-top:6px">Баритон</div>
+            <p style="margin-top:12px;color:var(--dark-brown);font-size:14px"><strong>Кратко:</strong> исполнитель оперного и камерного репертуара, автор сольных программ и записей.</p>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="card contact-card" id="contacts">
+          <div class="section-title" style="font-size:16px">Контакты</div>
+          <p class="meta">Для записи и сотрудничества</p>
+          <p><strong>Email:</strong> <a href="mailto:example@example.com">example@example.com</a></p>
+          <p><strong>Телефон:</strong> +7 (900) 000-00-00</p>
+          <p style="color:var(--muted);font-size:13px;margin-top:8px">Адрес: г. Йошкар-Ола (пример)</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer>&copy; <span id="year"></span> Владислав Калашников — все права защищены.</footer>
   </div>
-</section>
-<section id="gallery">
-  <h2>Фотогалерея</h2>
-  <div class="gallery">
-    <img src="images/photo1.jpg" alt="Владислав Калашников">
-    <img src="images/photo2.jpg" alt="Выступление">
-    <img src="images/photo3.jpg" alt="Сцена">
-  </div>
-</section>
-<footer>
-  <p>&copy; 2025 Владислав Калашников. Все права защищены.</p>
-</footer>
+
+  <script>
+    /* Year */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* Mobile menu open/close */
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobile = document.getElementById('closeMobile');
+
+    burger.addEventListener('click', () => {
+      mobileMenu.style.display = 'block';
+      mobileMenu.setAttribute('aria-hidden','false');
+    });
+    closeMobile.addEventListener('click', () => {
+      mobileMenu.style.display = 'none';
+      mobileMenu.setAttribute('aria-hidden','true');
+    });
+    mobileMenu.addEventListener('click', (e) => {
+      if (e.target === mobileMenu) {
+        mobileMenu.style.display = 'none';
+        mobileMenu.setAttribute('aria-hidden','true');
+      }
+    });
+
+    /* Smooth scroll and active link handling (desktop + mobile) */
+    document.querySelectorAll('[data-link]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const href = a.getAttribute('href');
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({behavior:'smooth',block:'start'});
+        document.querySelectorAll('[data-link]').forEach(x=>x.classList.remove('active'));
+        a.classList.add('active');
+        // also update desktop topnav
+        document.querySelectorAll('nav.topnav a').forEach(x=>x.classList.remove('active'));
+        const top = document.querySelector(`nav.topnav a[href="${href}"]`);
+        if (top) top.classList.add('active');
+        if (mobileMenu.style.display === 'block') mobileMenu.style.display = 'none';
+      });
+    });
+
+    /* Albums slider logic */
+    (function(){
+      const slider = document.getElementById('albumsSlider');
+      const slidesRow = document.getElementById('slidesRow');
+      const prev = document.getElementById('albPrev');
+      const next = document.getElementById('albNext');
+      let idx = 0;
+
+      function update() {
+        const slide = slider.querySelector('.slide');
+        if (!slide) return;
+        const gap = 14;
+        const w = slide.offsetWidth + gap;
+        slidesRow.style.transform = `translateX(${-idx * w}px)`;
+      }
+      prev.addEventListener('click', ()=>{
+        idx = Math.max(0, idx - 1);
+        update();
+      });
+      next.addEventListener('click', ()=>{
+        const max = slidesRow.children.length - Math.floor((slider.offsetWidth) / (slider.querySelector('.slide').offsetWidth + 14));
+        idx = Math.min(max, idx + 1);
+        update();
+      });
+      window.addEventListener('resize', update);
+      // initial
+      setTimeout(update, 100);
+    })();
+
+    /* Audio player */
+    (function(){
+      const audio = document.getElementById('audioNative');
+      const playBtn = document.getElementById('playBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const progress = document.getElementById('progress');
+      const timeLabel = document.getElementById('time');
+      const trackEls = Array.from(document.querySelectorAll('#trackList li'));
+
+      let current = 0;
+
+      function setTrack(i, autoplay=false){
+        if (i < 0) i = trackEls.length - 1;
+        if (i >= trackEls.length) i = 0;
+        current = i;
+        trackEls.forEach(t=>t.classList.remove('active'));
+        const el = trackEls[current];
+        el.classList.add('active');
+        audio.src = el.dataset.src;
+        audio.load();
+        if (autoplay) audio.play().catch(()=>{});
+        updatePlayBtn(!audio.paused && !audio.ended);
+      }
+
+      function updatePlayBtn(isPlaying){
+        playBtn.textContent = isPlaying ? '⏸' : '▶︎';
+        if (isPlaying) playBtn.classList.add('primary'); else playBtn.classList.remove('primary');
+      }
+
+      // init first
+      setTrack(0,false);
+
+      playBtn.addEventListener('click', ()=>{
+        if (audio.paused) audio.play(); else audio.pause();
+      });
+      audio.addEventListener('play', ()=>updatePlayBtn(true));
+      audio.addEventListener('pause', ()=>updatePlayBtn(false));
+
+      prevBtn.addEventListener('click', ()=>setTrack(current - 1, true));
+      nextBtn.addEventListener('click', ()=>setTrack(current + 1, true));
+
+      trackEls.forEach((t, i)=> t.addEventListener('click', ()=> setTrack(i, true)));
+
+      audio.addEventListener('timeupdate', ()=>{
+        if (audio.duration) {
+          const pct = (audio.currentTime / audio.duration) * 100;
+          progress.value = pct;
+          updateTime();
+        }
+      });
+      progress.addEventListener('input', (e)=>{
+        if (audio.duration) audio.currentTime = (e.target.value / 100) * audio.duration;
+      });
+      audio.addEventListener('ended', ()=> setTrack(current + 1, true));
+
+      function updateTime(){
+        const fmt = (s)=>{
+          if (!s || isNaN(s)) return '00:00';
+          const m = Math.floor(s/60), sec = Math.floor(s%60);
+          return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+        };
+        timeLabel.textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
+      }
+      audio.addEventListener('loadedmetadata', updateTime);
+      // keyboard accessibility
+      document.addEventListener('keydown', (e)=>{
+        if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT') {
+          e.preventDefault();
+          if (audio.paused) audio.play(); else audio.pause();
+        }
+        if (e.code === 'ArrowRight') audio.currentTime = Math.min(audio.duration||0, audio.currentTime + 5);
+        if (e.code === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - 5);
+      });
+    })();
+  </script>
+
+  <!--
+    ЗАМЕНИТЕ ФАЙЛЫ НА СВОИ:
+    - bg.jpg            (фон hero)
+    - photo1.jpg ... photo6.jpg  (фотографии)
+    - cover1.jpg, cover2.jpg, cover-placeholder.jpg (обложки альбомов/трека)
+    - audio1.mp3, audio2.mp3, audio3.mp3 (аудиозаписи)
+  -->
+
 </body>
 </html>
