@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Владислав Калашников — Баритон</title>
+  <style>
+    body { font-family: Georgia, serif; margin:0; padding:0; background:#fafafa; color:#333; line-height:1.6; }
+    header { background: linear-gradient(135deg, #7a0c1f, #c99b4a); color:white; text-align:center; padding:3rem 1rem; }
+    header h1 { margin:0; font-size:2.5rem; }
+    nav { display:flex; justify-content:center; gap:1.5rem; background:#600a18; flex-wrap:wrap; padding:0.7rem; }
+    nav a { color:white; text-decoration:none; font-weight:bold; transition:color 0.3s; }
+    nav a:hover { color:#ffd27f; }
+    section { max-width:1000px; margin:2rem auto; padding:1rem; background:white; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    h2 { border-bottom:2px solid #7a0c1f; padding-bottom:0.5rem; margin-bottom:1rem; color:#600a18; }
+    .bio { text-align:justify; }
+    .repertoire ul { padding-left:1.5rem; }
+    .repertoire li { margin-bottom:0.3rem; }
+    .audio-player { display:flex; flex-direction:column; gap:1rem; }
+    audio { width:100%; }
+    .gallery { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1rem; }
+    .gallery img { width:100%; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:transform 0.3s; }
+    .gallery img:hover { transform:scale(1.05); }
+    footer { text-align:center; padding:1rem; background:#600a18; color:white; margin-top:2rem; }
+    @media(max-width:768px){ header h1{font-size:2rem;} nav{gap:1rem;} }
+    @media(max-width:480px){ header{padding:2rem 1rem;} header h1{font-size:1.5rem;} section{margin:1rem; padding:0.8rem;} }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Владислав Калашников — Баритон</h1>
+</header>
+<nav>
+  <a href="#bio">Биография</a>
+  <a href="#repertoire">Репертуар</a>
+  <a href="#audio">Аудиозаписи</a>
+  <a href="#gallery">Фотогалерея</a>
+</nav>
+<section id="bio">
+  <h2>Биография</h2>
+  <div class="bio">
+    <p>АВТОБИОГРАФИЯ:</p>
+    <p>Путь в искусстве певца, баритона Владислава Калашникова — это пример стремительного творческого взлёта... (сюда вставляется полный текст)</p>
+  </div>
+</section>
+<section id="repertoire" class="repertoire">
+  <h2>Репертуар</h2>
+  <ul>
+    <li>Д. Верди — «Риголетто» (Риголетто), «Трубадур» (Граф ди Луна), «Аида» (Амонаро)...</li>
+    <li>Д. Пуччини — «Тоска» (Скарпиа), «Чио-Чио-сан» (Шарплес)</li>
+    <li>Д. Россини — «Севильский цирюльник» (Фигаро)</li>
+    <li>...и другие</li>
+  </ul>
+</section>
+<section id="audio">
+  <h2>Аудиозаписи</h2>
+  <div class="audio-player">
+    <p>🎵 Ария Риголетто</p>
+    <audio controls>
+      <source src="audio/sample1.mp3" type="audio/mpeg">
+    </audio>
+    <p>🎵 Ария Онегина</p>
+    <audio controls>
+      <source src="audio/sample2.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+</section>
+<section id="gallery">
+  <h2>Фотогалерея</h2>
+  <div class="gallery">
+    <img src="images/photo1.jpg" alt="Владислав Калашников">
+    <img src="images/photo2.jpg" alt="Выступление">
+    <img src="images/photo3.jpg" alt="Сцена">
+  </div>
+</section>
+<footer>
+  <p>&copy; 2025 Владислав Калашников. Все права защищены.</p>
+</footer>
+</body>
+</html>
