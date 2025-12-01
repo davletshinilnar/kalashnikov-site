@@ -141,21 +141,73 @@
       .gallery-grid img{height:90px}
       .rep-table th,.rep-table td{padding:6px}
     }
+/* ================= AUDIO ACCORDION ================= */
+.more-audio { 
+  text-align:center;
+  margin-top:12px;
+}
+.more-btn{
+  background:var(--brown);
+  color:var(--white);
+  border:none;
+  padding:8px 14px;
+  cursor:pointer;
+  border-radius:6px;
+  transition:.3s;
+}
+.more-btn:hover{background:var(--bordo)}
 
+/* скрываем треки после 3 */
+.track-hidden{
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transition:max-height .6s ease, opacity .6s;
+}
+.track-visible{
+  max-height:500px;
+  opacity:1;
+}
+
+/* ================= FULLSCREEN GALLERY VIEWER ================= */
+.viewer{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+.viewer.active{ display:flex; }
+.viewer img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:10px;
+}
+.viewer-btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  padding:15px;
+  background:rgba(255,255,255,.15);
+  border-radius:6px;
+  cursor:pointer;
+  font-size:32px;
+  color:white;
+  user-select:none;
+  transition:.3s;
+}
+.viewer-btn:hover{background:rgba(255,255,255,.3);}
+#viewerPrev{left:20px;}  
+#viewerNext{right:20px;}  
+#viewerClose{
+  top:25px;
+  right:25px;
+  transform:none;
+  font-size:26px;
+}
   </style>
-
-<style>
-.audio-list li:nth-child(n+4){display:none;}
-.more-audio{text-align:center;margin-top:10px;}
-.more-btn{background:#6c2a2a;color:#fff;padding:8px 15px;border:none;border-radius:6px;cursor:pointer;}
-.more-btn:hover{background:#8e3a3a;}
-.viewer{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;z-index:9999;}
-.viewer.active{display:flex;}
-.viewer img{max-width:90%;max-height:90%;border-radius:10px;}
-.viewer-btn{position:absolute;top:50%;transform:translateY(-50%);font-size:40px;color:#fff;padding:15px;cursor:pointer;}
-#viewerPrev{left:20px;}#viewerNext{right:20px;}#viewerClose{top:20px;right:20px;font-size:30px;transform:none;}
-</style>
-
 </head>
 <body>
 
@@ -213,8 +265,7 @@
           <a class="cta" href="#audio">Послушать записи</a>
         </div>
       </div>
-    <div class="more-audio"><button id="expandTracks" class="more-btn">▼ Показать больше</button></div>
-</section>
+    </section>
 
     <div class="columns">
       <main>
@@ -351,6 +402,9 @@
                 </div>
               </li>
             </ul>
+            <div class="more-audio">
+    <button id="expandTracks" class="more-btn">▼ Показать больше</button>
+</div>
           </div>
         </section>
 
@@ -593,6 +647,59 @@
         if (e.code === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - 5);
       });
     })();
+    /* ========== AUDIO — показать только 3 трека + раскрытие ========== */
+const tracks = document.querySelectorAll('#trackList li');
+const expandBtn = document.getElementById('expandTracks');
+
+tracks.forEach((tr,i)=>{ if(i>2) tr.classList.add('track-hidden');});
+
+expandBtn.addEventListener('click', ()=>{
+
+    const hidden = document.querySelectorAll('.track-hidden, .track-visible');
+
+    hidden.forEach(t=>{
+        t.classList.toggle('track-hidden');
+        t.classList.toggle('track-visible');
+    });
+
+    expandBtn.textContent =
+        expandBtn.textContent.includes('больше')
+        ? "▲ Показать меньше"
+        : "▼ Показать больше";
+});
+    * ========== FULLSCREEN GALLERY VIEWER ========== */
+const gallery = document.querySelectorAll('#photos img');
+const viewer = document.getElementById('viewer');
+const viewerImg = document.getElementById('viewerImg');
+const btnPrev = document.getElementById('viewerPrev');
+const btnNext = document.getElementById('viewerNext');
+const btnClose = document.getElementById('viewerClose');
+
+let currentPhoto = 0;
+
+function showPhoto(i){
+    currentPhoto = i;
+    viewerImg.src = gallery[i].src;
+    viewer.classList.add('active');
+}
+
+/* открытия */
+gallery.forEach((img,i)=> img.onclick = ()=> showPhoto(i));
+
+/* листание */
+btnPrev.onclick = ()=> showPhoto((currentPhoto-1+gallery.length)%gallery.length);
+btnNext.onclick = ()=> showPhoto((currentPhoto+1)%gallery.length);
+
+/* закрыть */
+btnClose.onclick = ()=> viewer.classList.remove('active');
+
+/* клавиши управления */
+document.addEventListener('keydown',e=>{
+    if(!viewer.classList.contains('active')) return;
+    if(e.key==="Escape") viewer.classList.remove('active');
+    if(e.key==="ArrowRight") btnNext.onclick();
+    if(e.key==="ArrowLeft")  btnPrev.onclick();
+});
   </script>
 
   <!--
@@ -602,32 +709,11 @@
     - cover1.jpg, cover2.jpg, cover-placeholder.jpg (обложки альбомов/трека)
     - audio1.mp3, audio2.mp3, audio3.mp3 (аудиозаписи)
   -->
-
-
 <div id="viewer" class="viewer">
-<img id="viewerImg" src="">
-<div id="viewerPrev" class="viewer-btn">❮</div>
-<div id="viewerNext" class="viewer-btn">❯</div>
-<div id="viewerClose" class="viewer-btn">✕</div>
+    <img id="viewerImg" src="">
+    <div id="viewerPrev" class="viewer-btn">❮</div>
+    <div id="viewerNext" class="viewer-btn">❯</div>
+    <div id="viewerClose" class="viewer-btn">✕</div>
 </div>
-
 </body>
-
-<script>
-const tracks=document.querySelectorAll('.audio-list li');
-const btn=document.getElementById('expandTracks');
-btn.onclick=()=>{
- tracks.forEach((t,i)=>{if(i>=3)t.style.display=t.style.display==='none'?'block':'none';});
- btn.textContent=btn.textContent.includes('больше')?'▲ Показать меньше':'▼ Показать больше';
-};
-
-const imgs=document.querySelectorAll('.gallery img');
-const viewer=document.getElementById('viewer');
-const vimg=document.getElementById('viewerImg');
-let idx=0;
-imgs.forEach((im,i)=>im.onclick=()=>{idx=i;vimg.src=im.src;viewer.classList.add('active')});
-document.getElementById('viewerPrev').onclick=()=>{idx=(idx-1+imgs.length)%imgs.length;vimg.src=imgs[idx].src;}
-document.getElementById('viewerNext').onclick=()=>{idx=(idx+1)%imgs.length;vimg.src=imgs[idx].src;}
-document.getElementById('viewerClose').onclick=()=>viewer.classList.remove('active');
-</script>
 </html>
