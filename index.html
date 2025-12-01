@@ -143,6 +143,19 @@
     }
 
   </style>
+
+<style>
+.audio-list li:nth-child(n+4){display:none;}
+.more-audio{text-align:center;margin-top:10px;}
+.more-btn{background:#6c2a2a;color:#fff;padding:8px 15px;border:none;border-radius:6px;cursor:pointer;}
+.more-btn:hover{background:#8e3a3a;}
+.viewer{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;z-index:9999;}
+.viewer.active{display:flex;}
+.viewer img{max-width:90%;max-height:90%;border-radius:10px;}
+.viewer-btn{position:absolute;top:50%;transform:translateY(-50%);font-size:40px;color:#fff;padding:15px;cursor:pointer;}
+#viewerPrev{left:20px;}#viewerNext{right:20px;}#viewerClose{top:20px;right:20px;font-size:30px;transform:none;}
+</style>
+
 </head>
 <body>
 
@@ -200,7 +213,8 @@
           <a class="cta" href="#audio">Послушать записи</a>
         </div>
       </div>
-    </section>
+    <div class="more-audio"><button id="expandTracks" class="more-btn">▼ Показать больше</button></div>
+</section>
 
     <div class="columns">
       <main>
@@ -589,5 +603,31 @@
     - audio1.mp3, audio2.mp3, audio3.mp3 (аудиозаписи)
   -->
 
+
+<div id="viewer" class="viewer">
+<img id="viewerImg" src="">
+<div id="viewerPrev" class="viewer-btn">❮</div>
+<div id="viewerNext" class="viewer-btn">❯</div>
+<div id="viewerClose" class="viewer-btn">✕</div>
+</div>
+
 </body>
+
+<script>
+const tracks=document.querySelectorAll('.audio-list li');
+const btn=document.getElementById('expandTracks');
+btn.onclick=()=>{
+ tracks.forEach((t,i)=>{if(i>=3)t.style.display=t.style.display==='none'?'block':'none';});
+ btn.textContent=btn.textContent.includes('больше')?'▲ Показать меньше':'▼ Показать больше';
+};
+
+const imgs=document.querySelectorAll('.gallery img');
+const viewer=document.getElementById('viewer');
+const vimg=document.getElementById('viewerImg');
+let idx=0;
+imgs.forEach((im,i)=>im.onclick=()=>{idx=i;vimg.src=im.src;viewer.classList.add('active')});
+document.getElementById('viewerPrev').onclick=()=>{idx=(idx-1+imgs.length)%imgs.length;vimg.src=imgs[idx].src;}
+document.getElementById('viewerNext').onclick=()=>{idx=(idx+1)%imgs.length;vimg.src=imgs[idx].src;}
+document.getElementById('viewerClose').onclick=()=>viewer.classList.remove('active');
+</script>
 </html>
