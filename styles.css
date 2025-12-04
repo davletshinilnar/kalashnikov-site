@@ -208,3 +208,8 @@
   .viewer img#viewerImg{ max-height: 68%; }
   .viewer-prev, .viewer-next { left: 8px; right: 8px; }
 }
+
+/* fixed viewer arrows */
+.viewer-prev{ position:absolute; left:10px; top:50%; transform:translateY(-50%); }
+.viewer-next{ position:absolute; right:10px; top:50%; transform:translateY(-50%); }
+.viewer-close{ position:absolute; right:10px; top:10px; }
