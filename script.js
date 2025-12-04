@@ -231,3 +231,15 @@ document.addEventListener('DOMContentLoaded', function(){
     if(e.target === viewer) closeViewer();
   });
 });
+
+// bio accordion
+document.addEventListener('DOMContentLoaded', ()=>{
+ let btn=document.getElementById('bioToggle');
+ if(btn){
+   btn.onclick=()=>{
+     let b=document.getElementById('bioExtra');
+     if(b.style.display==='none'){b.style.display='block'; btn.textContent='▲ Показать меньше';}
+     else{b.style.display='none'; btn.textContent='▼ Показать больше';}
+   };
+ }
+});
