@@ -1,10 +1,90 @@
-/* Original scripts extracted from uploaded file (if any) */
+// MOBILE MENU
+const burgerBtn = document.getElementById("burgerBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+
+burgerBtn.onclick = () => {
+    mobileMenu.style.display = mobileMenu.style.display === "flex" ? "none" : "flex";
+};
+
+// BIO ACCORDION
+const bioBtn = document.getElementById("bioToggle");
+const bioExtra = document.getElementById("bioExtra");
+
+if (bioBtn) {
+    bioBtn.onclick = () => {
+        if (bioExtra.style.display === "none") {
+            bioExtra.style.display = "block";
+            bioBtn.textContent = "▲ Показать меньше";
+        } else {
+            bioExtra.style.display = "none";
+            bioBtn.textContent = "▼ Показать больше";
+        }
+    };
+}
+
+// AUDIO ACCORDION
+const audioBtn = document.getElementById("audioToggle");
+const audioExtra = document.getElementById("audioExtra");
+
+if (audioBtn) {
+    audioBtn.onclick = () => {
+        if (audioExtra.style.display === "none") {
+            audioExtra.style.display = "block";
+            audioBtn.textContent = "▲ Показать меньше";
+        } else {
+            audioExtra.style.display = "none";
+            audioBtn.textContent = "▼ Показать больше";
+        }
+    };
+}
+
+// GALLERY VIEWER
+const images = document.querySelectorAll(".gallery-img");
+const viewer = document.getElementById("viewer");
+const viewerImg = document.getElementById("viewerImg");
+const prev = document.getElementById("viewerPrev");
+const next = document.getElementById("viewerNext");
+const closeBtn = document.getElementById("viewerClose");
+
+let currentIndex = 0;
+
+images.forEach((img, index) => {
+    img.onclick = () => {
+        currentIndex = index;
+        viewerImg.src = img.src;
+        viewer.style.display = "flex";
+    };
+});
+
+closeBtn.onclick = () => viewer.style.display = "none";
+
+prev.onclick = () => {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    viewerImg.src = images[currentIndex].src;
+};
+
+next.onclick = () => {
+    currentIndex = (currentIndex + 1) % images.length;
+    viewerImg.src = images[currentIndex].src;
+};
+
+// Close on click outside
+viewer.onclick = (e) => {
+    if (e.target === viewer) viewer.style.display = "none";
+};
+
+
+
+
+
+
+/* Original scripts extracted from uploaded file (if any) 
 
 /* Year */
-    document.getElementById('year').textContent = new Date().getFullYear();
+/*    document.getElementById('year').textContent = new Date().getFullYear();
 
     /* Mobile menu open/close */
-    const burger = document.getElementById('burger');
+  /*  const burger = document.getElementById('burger');
     const mobileMenu = document.getElementById('mobileMenu');
     const closeMobile = document.getElementById('closeMobile');
 
@@ -24,7 +104,7 @@
     });
 
     /* Smooth scroll and active link handling (desktop + mobile) */
-    document.querySelectorAll('[data-link]').forEach(a=>{
+   /* document.querySelectorAll('[data-link]').forEach(a=>{
       a.addEventListener('click', (e)=>{
         e.preventDefault();
         const href = a.getAttribute('href');
@@ -41,7 +121,7 @@
     });
 
     /* Albums slider logic */
-    (function(){
+/*    (function(){
       const slider = document.getElementById('albumsSlider');
       const slidesRow = document.getElementById('slidesRow');
       const prev = document.getElementById('albPrev');
@@ -70,7 +150,7 @@
     })();
 
     /* Audio player */
-    (function(){
+/*    (function(){
       const audio = document.getElementById('audioNative');
       const playBtn = document.getElementById('playBtn');
       const prevBtn = document.getElementById('prevBtn');
@@ -148,7 +228,7 @@
 /* Additional scripts for accordion and viewer */
 
 /* ===== Audio accordion behavior ===== */
-document.addEventListener('DOMContentLoaded', function(){
+/*      document.addEventListener('DOMContentLoaded', function(){
   let tracks = Array.from(document.querySelectorAll('#trackList li'));
   if(tracks.length === 0){
     tracks = Array.from(document.querySelectorAll('.audio-list li, .track-list li'));
@@ -180,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   /* ===== Fullscreen gallery viewer ===== */
-  const galleryImgs = Array.from(document.querySelectorAll('#photos img, .gallery img, .gallery-grid img'));
+/*  const galleryImgs = Array.from(document.querySelectorAll('#photos img, .gallery img, .gallery-grid img'));
   const viewer = document.getElementById('viewer');
   const viewerImg = document.getElementById('viewerImg');
   const prevBtn = document.getElementById('viewerPrev');
@@ -222,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   document.addEventListener('keydown', function(e){
     if(!viewer.classList.contains('active')) return;
-    if(e.key === 'ArrowRight') showNext(1);
+    if(e.key === 'ArrowRight') showNext(1);  
     if(e.key === 'ArrowLeft') showNext(-1);
     if(e.key === 'Escape') closeViewer();
   });
@@ -243,3 +323,4 @@ document.addEventListener('DOMContentLoaded', ()=>{
    };
  }
 });
+
