@@ -6,13 +6,15 @@ const burger = document.getElementById('burger');
 const mobileMenu = document.getElementById('mobileMenu');
 const closeMobile = document.getElementById('closeMobile');
 
-burger.addEventListener('click', () => {
-    mobileMenu.setAttribute('aria-hidden', 'false');
-});
+if (burger && mobileMenu && closeMobile) {
+    burger.addEventListener('click', () => {
+        mobileMenu.setAttribute('aria-hidden', 'false');
+    });
 
-closeMobile.addEventListener('click', () => {
-    mobileMenu.setAttribute('aria-hidden', 'true');
-});
+    closeMobile.addEventListener('click', () => {
+        mobileMenu.setAttribute('aria-hidden', 'true');
+    });
+}
 
 // Навигация по ссылкам
 document.querySelectorAll('[data-link]').forEach(link => {
@@ -26,7 +28,9 @@ document.querySelectorAll('[data-link]').forEach(link => {
         e.target.classList.add('active');
         
         // Закрыть мобильное меню
-        mobileMenu.setAttribute('aria-hidden', 'true');
+        if (mobileMenu) {
+            mobileMenu.setAttribute('aria-hidden', 'true');
+        }
     });
 });
 
@@ -40,7 +44,7 @@ const timeDisplay = document.getElementById('time');
 const trackList = document.getElementById('trackList');
 
 let currentTrack = 0;
-const tracks = Array.from(trackList.children);
+const tracks = Array.from(trackList ? trackList.children : []);
 
 // Форматирование времени
 function formatTime(seconds) {
@@ -51,14 +55,18 @@ function formatTime(seconds) {
 
 // Обновление прогресса
 function updateProgress() {
-    const percent = (audio.currentTime / audio.duration) * 100;
-    progress.value = percent;
-    
-    timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+    if (audio && progress && timeDisplay) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progress.value = percent || 0;
+        
+        timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+    }
 }
 
 // Загрузка трека
 function loadTrack(index) {
+    if (!tracks[index] || !audio) return;
+    
     const track = tracks[index];
     const src = track.dataset.src;
     const title = track.dataset.title;
@@ -69,69 +77,83 @@ function loadTrack(index) {
     // Обновить активный трек
     tracks.forEach(t => t.classList.remove('active'));
     track.classList.add('active');
-    
-    // Обновить заголовок (если есть элемент для этого)
-    const titleElement = document.querySelector('.current-track-title');
-    if (titleElement) {
-        titleElement.textContent = title;
-    }
 }
 
 // Воспроизведение/пауза
-playBtn.addEventListener('click', () => {
-    if (audio.paused) {
-        audio.play();
-        playBtn.textContent = '⏸';
-    } else {
-        audio.pause();
-        playBtn.textContent = '▶︎';
-    }
-});
+if (playBtn && audio) {
+    playBtn.addEventListener('click', () => {
+        if (audio.paused) {
+            audio.play();
+            playBtn.textContent = '⏸';
+        } else {
+            audio.pause();
+            playBtn.textContent = '▶︎';
+        }
+    });
+}
 
 // Следующий трек
-nextBtn.addEventListener('click', () => {
-    currentTrack = (currentTrack + 1) % tracks.length;
-    loadTrack(currentTrack);
-    audio.play();
-    playBtn.textContent = '⏸';
-});
-
-// Предыдущий трек
-prevBtn.addEventListener('click', () => {
-    currentTrack = currentTrack === 0 ? tracks.length - 1 : currentTrack - 1;
-    loadTrack(currentTrack);
-    audio.play();
-    playBtn.textContent = '⏸';
-});
-
-// Клик по треку в плейлисте
-tracks.forEach((track, index) => {
-    track.addEventListener('click', () => {
-        currentTrack = index;
+if (nextBtn && tracks.length > 0) {
+    nextBtn.addEventListener('click', () => {
+        currentTrack = (currentTrack + 1) % tracks.length;
         loadTrack(currentTrack);
         audio.play();
         playBtn.textContent = '⏸';
     });
-});
+}
+
+// Предыдущий трек
+if (prevBtn && tracks.length > 0) {
+    prevBtn.addEventListener('click', () => {
+        currentTrack = currentTrack === 0 ? tracks.length - 1 : currentTrack - 1;
+        loadTrack(currentTrack);
+        audio.play();
+        playBtn.textContent = '⏸';
+    });
+}
+
+// Клик по треку в плейлисте
+if (trackList) {
+    tracks.forEach((track, index) => {
+        track.addEventListener('click', () => {
+            currentTrack = index;
+            loadTrack(currentTrack);
+            audio.play();
+            playBtn.textContent = '⏸';
+        });
+    });
+}
 
 // Обновление прогресса
-audio.addEventListener('timeupdate', updateProgress);
+if (audio) {
+    audio.addEventListener('timeupdate', updateProgress);
+}
 
 // Перемотка
-progress.addEventListener('input', () => {
-    const time = (progress.value / 100) * audio.duration;
-    audio.currentTime = time;
-});
+if (progress && audio) {
+    progress.addEventListener('input', () => {
+        const time = (progress.value / 100) * audio.duration;
+        audio.currentTime = time;
+    });
+}
 
 // Когда трек загружен
-audio.addEventListener('loadedmetadata', () => {
-    timeDisplay.textContent = `00:00 / ${formatTime(audio.duration)}`;
-});
+if (audio) {
+    audio.addEventListener('loadedmetadata', () => {
+        if (timeDisplay) {
+            timeDisplay.textContent = `00:00 / ${formatTime(audio.duration)}`;
+        }
+    });
+}
 
 // Когда трек закончился
-audio.addEventListener('ended', () => {
-    nextBtn.click();
-});
+if (audio) {
+    audio.addEventListener('ended', () => {
+        if (nextBtn) {
+            nextBtn.click();
+        }
+    });
+}
 
 // Галерея фото
 const galleryImages = document.querySelectorAll('.gallery-grid img');
@@ -144,74 +166,83 @@ const viewerNext = document.getElementById('viewerNext');
 let currentImageIndex = 0;
 
 // Открытие просмотрщика
-galleryImages.forEach((img, index) => {
-    img.addEventListener('click', () => {
-        currentImageIndex = index;
-        viewerImg.src = img.src;
-        viewer.setAttribute('aria-hidden', 'false');
-        // Также добавим класс для плавного появления
-        viewer.style.opacity = '1';
-        viewer.style.visibility = 'visible';
+if (galleryImages.length > 0 && viewer && viewerImg) {
+    galleryImages.forEach((img, index) => {
+        img.addEventListener('click', () => {
+            currentImageIndex = index;
+            viewerImg.src = img.src;
+            viewer.setAttribute('aria-hidden', 'false');
+        });
     });
-});
+}
 
 // Закрытие просмотрщика
-viewerClose.addEventListener('click', () => {
-    viewer.setAttribute('aria-hidden', 'true');
-    viewer.style.opacity = '0';
-    viewer.style.visibility = 'hidden';
-});
+if (viewerClose && viewer) {
+    viewerClose.addEventListener('click', () => {
+        viewer.setAttribute('aria-hidden', 'true');
+    });
+}
 
 // Предыдущее фото
-viewerPrev.addEventListener('click', () => {
-    currentImageIndex = currentImageIndex === 0 ? galleryImages.length - 1 : currentImageIndex - 1;
-    viewerImg.src = galleryImages[currentImageIndex].src;
-});
+if (viewerPrev && galleryImages.length > 0 && viewerImg) {
+    viewerPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentImageIndex = currentImageIndex === 0 ? galleryImages.length - 1 : currentImageIndex - 1;
+        viewerImg.src = galleryImages[currentImageIndex].src;
+    });
+}
 
 // Следующее фото
-viewerNext.addEventListener('click', () => {
-    currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
-    viewerImg.src = galleryImages[currentImageIndex].src;
-});
+if (viewerNext && galleryImages.length > 0 && viewerImg) {
+    viewerNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+        viewerImg.src = galleryImages[currentImageIndex].src;
+    });
+}
 
 // Закрытие по клику вне изображения
-viewer.addEventListener('click', (e) => {
-    if (e.target === viewer) {
-        viewer.setAttribute('aria-hidden', 'true');
-        viewer.style.opacity = '0';
-        viewer.style.visibility = 'hidden';
-    }
-});
+if (viewer) {
+    viewer.addEventListener('click', (e) => {
+        if (e.target === viewer) {
+            viewer.setAttribute('aria-hidden', 'true');
+        }
+    });
+}
 
 // Клавиши для навигации в галерее
 document.addEventListener('keydown', (e) => {
-    if (viewer.getAttribute('aria-hidden') === 'false') {
+    if (viewer && viewer.getAttribute('aria-hidden') === 'false') {
         if (e.key === 'Escape') {
             viewer.setAttribute('aria-hidden', 'true');
-            viewer.style.opacity = '0';
-            viewer.style.visibility = 'hidden';
         } else if (e.key === 'ArrowLeft') {
-            viewerPrev.click();
+            if (viewerPrev) viewerPrev.click();
         } else if (e.key === 'ArrowRight') {
-            viewerNext.click();
+            if (viewerNext) viewerNext.click();
         }
     }
 });
 
-
 // Раскрытие всех треков
 const expandTracks = document.getElementById('expandTracks');
-if (expandTracks) {
+if (expandTracks && trackList) {
+    // Скрыть треки по умолчанию (оставить только первые 3)
+    const allTracks = Array.from(trackList.children);
+    if (allTracks.length > 3) {
+        for (let i = 3; i < allTracks.length; i++) {
+            allTracks[i].style.display = 'none';
+        }
+    }
+    
     expandTracks.addEventListener('click', () => {
         const isExpanded = expandTracks.getAttribute('aria-expanded') === 'true';
         expandTracks.setAttribute('aria-expanded', !isExpanded);
-        expandTracks.textContent = isExpanded ? '▼ Показать больше' : '▲ Скрыть';
+        expandTracks.innerHTML = isExpanded ? '▼ Показать больше' : '▲ Скрыть';
         
-        // Здесь можно добавить логику для показа/скрытия треков
-        const hiddenTracks = document.querySelectorAll('.track-list li:not(:nth-child(-n+4))');
-        hiddenTracks.forEach(track => {
-            track.style.display = isExpanded ? 'none' : 'flex';
-        });
+        // Показать/скрыть треки
+        for (let i = 3; i < allTracks.length; i++) {
+            allTracks[i].style.display = isExpanded ? 'none' : 'flex';
+        }
     });
 }
 
@@ -221,10 +252,10 @@ const slidesRow = document.getElementById('slidesRow');
 const albPrev = document.getElementById('albPrev');
 const albNext = document.getElementById('albNext');
 
-if (albumsSlider && slidesRow) {
+if (albumsSlider && slidesRow && albPrev && albNext) {
     let slideIndex = 0;
     const slides = slidesRow.querySelectorAll('.slide');
-    const slideWidth = slides[0]?.offsetWidth + 20 || 220; // ширина слайда + отступ
+    const slideWidth = slides[0] ? slides[0].offsetWidth + 20 : 220;
     
     function updateSlider() {
         slidesRow.style.transform = `translateX(-${slideIndex * slideWidth}px)`;
