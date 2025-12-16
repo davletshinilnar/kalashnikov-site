@@ -9,10 +9,20 @@ const closeMobile = document.getElementById('closeMobile');
 if (burger && mobileMenu && closeMobile) {
     burger.addEventListener('click', () => {
         mobileMenu.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden'; // Предотвращаем скролл при открытом меню
     });
 
     closeMobile.addEventListener('click', () => {
         mobileMenu.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = ''; // Восстанавливаем скролл
+    });
+
+    // Закрытие меню при клике вне его
+    mobileMenu.addEventListener('click', (e) => {
+        if (e.target === mobileMenu) {
+            mobileMenu.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
     });
 }
 
@@ -30,6 +40,7 @@ document.querySelectorAll('[data-link]').forEach(link => {
         // Закрыть мобильное меню
         if (mobileMenu) {
             mobileMenu.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
         }
     });
 });
@@ -44,7 +55,7 @@ const timeDisplay = document.getElementById('time');
 const trackList = document.getElementById('trackList');
 
 let currentTrack = 0;
-const tracks = Array.from(trackList ? trackList.children : []);
+const tracks = trackList ? Array.from(trackList.children) : [];
 
 // Форматирование времени
 function formatTime(seconds) {
@@ -55,7 +66,7 @@ function formatTime(seconds) {
 
 // Обновление прогресса
 function updateProgress() {
-    if (audio && progress && timeDisplay) {
+    if (audio && progress && timeDisplay && audio.duration) {
         const percent = (audio.currentTime / audio.duration) * 100;
         progress.value = percent || 0;
         
@@ -69,7 +80,8 @@ function loadTrack(index) {
     
     const track = tracks[index];
     const src = track.dataset.src;
-    const title = track.dataset.title;
+    
+    if (!src) return;
     
     audio.src = src;
     audio.load();
@@ -83,7 +95,7 @@ function loadTrack(index) {
 if (playBtn && audio) {
     playBtn.addEventListener('click', () => {
         if (audio.paused) {
-            audio.play();
+            audio.play().catch(e => console.log('Ошибка воспроизведения:', e));
             playBtn.textContent = '⏸';
         } else {
             audio.pause();
@@ -93,21 +105,21 @@ if (playBtn && audio) {
 }
 
 // Следующий трек
-if (nextBtn && tracks.length > 0) {
+if (nextBtn && tracks.length > 0 && audio) {
     nextBtn.addEventListener('click', () => {
         currentTrack = (currentTrack + 1) % tracks.length;
         loadTrack(currentTrack);
-        audio.play();
+        audio.play().catch(e => console.log('Ошибка воспроизведения:', e));
         playBtn.textContent = '⏸';
     });
 }
 
 // Предыдущий трек
-if (prevBtn && tracks.length > 0) {
+if (prevBtn && tracks.length > 0 && audio) {
     prevBtn.addEventListener('click', () => {
         currentTrack = currentTrack === 0 ? tracks.length - 1 : currentTrack - 1;
         loadTrack(currentTrack);
-        audio.play();
+        audio.play().catch(e => console.log('Ошибка воспроизведения:', e));
         playBtn.textContent = '⏸';
     });
 }
@@ -118,7 +130,7 @@ if (trackList) {
         track.addEventListener('click', () => {
             currentTrack = index;
             loadTrack(currentTrack);
-            audio.play();
+            audio.play().catch(e => console.log('Ошибка воспроизведения:', e));
             playBtn.textContent = '⏸';
         });
     });
@@ -132,8 +144,10 @@ if (audio) {
 // Перемотка
 if (progress && audio) {
     progress.addEventListener('input', () => {
-        const time = (progress.value / 100) * audio.duration;
-        audio.currentTime = time;
+        if (audio.duration) {
+            const time = (progress.value / 100) * audio.duration;
+            audio.currentTime = time;
+        }
     });
 }
 
@@ -155,7 +169,7 @@ if (audio) {
     });
 }
 
-// Галерея фото
+// Галерея фото - ИСПРАВЛЕНО
 const galleryImages = document.querySelectorAll('.gallery-grid img');
 const viewer = document.getElementById('viewer');
 const viewerImg = document.getElementById('viewerImg');
@@ -165,27 +179,36 @@ const viewerNext = document.getElementById('viewerNext');
 
 let currentImageIndex = 0;
 
+console.log('Найдено изображений:', galleryImages.length);
+console.log('Просмотрщик:', viewer);
+
 // Открытие просмотрщика
 if (galleryImages.length > 0 && viewer && viewerImg) {
     galleryImages.forEach((img, index) => {
-        img.addEventListener('click', () => {
+        img.addEventListener('click', (e) => {
+            console.log('Клик по изображению', index);
+            e.preventDefault();
             currentImageIndex = index;
             viewerImg.src = img.src;
             viewer.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden'; // Предотвращаем скролл
         });
     });
 }
 
 // Закрытие просмотрщика
 if (viewerClose && viewer) {
-    viewerClose.addEventListener('click', () => {
+    viewerClose.addEventListener('click', (e) => {
+        e.preventDefault();
         viewer.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = ''; // Восстанавливаем скролл
     });
 }
 
 // Предыдущее фото
 if (viewerPrev && galleryImages.length > 0 && viewerImg) {
     viewerPrev.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         currentImageIndex = currentImageIndex === 0 ? galleryImages.length - 1 : currentImageIndex - 1;
         viewerImg.src = galleryImages[currentImageIndex].src;
@@ -195,6 +218,7 @@ if (viewerPrev && galleryImages.length > 0 && viewerImg) {
 // Следующее фото
 if (viewerNext && galleryImages.length > 0 && viewerImg) {
     viewerNext.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
         viewerImg.src = galleryImages[currentImageIndex].src;
@@ -206,6 +230,7 @@ if (viewer) {
     viewer.addEventListener('click', (e) => {
         if (e.target === viewer) {
             viewer.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
         }
     });
 }
@@ -215,6 +240,7 @@ document.addEventListener('keydown', (e) => {
     if (viewer && viewer.getAttribute('aria-hidden') === 'false') {
         if (e.key === 'Escape') {
             viewer.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
         } else if (e.key === 'ArrowLeft') {
             if (viewerPrev) viewerPrev.click();
         } else if (e.key === 'ArrowRight') {
@@ -258,7 +284,9 @@ if (albumsSlider && slidesRow && albPrev && albNext) {
     const slideWidth = slides[0] ? slides[0].offsetWidth + 20 : 220;
     
     function updateSlider() {
-        slidesRow.style.transform = `translateX(-${slideIndex * slideWidth}px)`;
+        if (slidesRow) {
+            slidesRow.style.transform = `translateX(-${slideIndex * slideWidth}px)`;
+        }
     }
     
     albNext.addEventListener('click', () => {
@@ -275,3 +303,16 @@ if (albumsSlider && slidesRow && albPrev && albNext) {
         }
     });
 }
+
+// Обработка ошибок загрузки изображений
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        img.addEventListener('error', function() {
+            console.log('Ошибка загрузки изображения:', this.src);
+            // Можно добавить placeholder
+            this.style.backgroundColor = '#ddd';
+            this.alt = 'Изображение недоступно';
+        });
+    });
+});
