@@ -1,95 +1,306 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Владислав Калашников — Баритон</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Владислав Калашников — Баритон</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<header class="header">
-    <div class="logo">Владислав Калашников</div>
-    <nav class="nav">
-        <a href="#home">Главная</a>
-        <a href="#biography">Биография</a>
-        <a href="#audio">Аудиозаписи</a>
-        <a href="#gallery">Фотоальбом</a>
-        <a href="#contacts">Контакты</a>
-    </nav>
-
-    <div class="burger" id="burgerBtn">☰</div>
-
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="#home">Главная</a>
-        <a href="#biography">Биография</a>
-        <a href="#audio">Аудиозаписи</a>
-        <a href="#gallery">Фотоальбом</a>
-        <a href="#contacts">Контакты</a>
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
+    <div class="menu-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <div>
+          <h3 style="margin:0;font-family:Playfair Display">Владислав Калашников</h3>
+          <div style="font-size:13px;color:var(--muted)">Баритон</div>
+        </div>
+        <button id="closeMobile" class="btn" aria-label="Закрыть меню">✕</button>
+      </div>
+      <nav style="display:flex;flex-direction:column">
+        <a href="#home" data-link class="active">Главная</a>
+        <a href="#bio" data-link>Биография</a>
+        <a href="#albums" data-link>Альбомы</a>
+        <a href="#audio" data-link>Аудиозаписи</a>
+        <a href="#photos" data-link>Фотоальбом</a>
+        <a href="#repertoire" data-link>Репертуар</a>
+        <a href="#contacts" data-link>Контакты</a>
+      </nav>
     </div>
-</header>
+  </div>
 
-<section id="home" class="hero">
-    <h1>Баритон Владислав Калашников</h1>
-</section>
+  <div class="site">
+    <header class="main-header">
+      <div class="brand">
+        <div class="logo" style="background-image:url('images/photo1.jpg');background-size:cover;background-position:center"></div>
+        <div>
+          <h1>Владислав Калашников</h1>
+          <p>Баритон</p>
+        </div>
+      </div>
 
-<section id="biography" class="section biography">
-    <h2>Биография</h2>
+      <nav class="topnav" aria-label="Главное меню">
+        <a href="#home" class="active" data-link>Главная</a>
+        <a href="#bio" data-link>Биография</a>
+        <a href="#albums" data-link>Альбомы</a>
+        <a href="#audio" data-link>Аудиозаписи</a>
+        <a href="#photos" data-link>Фотоальбом</a>
+        <a href="#repertoire" data-link>Репертуар</a>
+        <a href="#contacts" data-link>Контакты</a>
+      </nav>
 
-    <p>
-Путь в искусстве певца, баритона Владислава Калашникова - это пример стремительного творческого взлёта человека, сначала посвятившего себя другой профессии, а теперь уже ярко и плодотворно служащего оперному искусству, создавая один вдохновенный образ за другим. Владислав Михайлович Калашников родился 13 января 1951 года в селе Новокиевский Увал Амурской области. Будучи в зрелом возрасте, имея за плечами более чем 10-летний опыт инженерной профессии в 1979 году поступает в Благовещенское музыкальное училище и экстерном заканчивает его в 1982 году по классу з.а.РСФСР Валерия Александровича Побережского. В этом же, 1982 году поступает в Горьковскую государственную консерваторию в класс з.д.и. РСФСР, профессора Евгения Григорьевича Крестинского и успешно заканчивает её в 1987 году. В камерном классе исполнял вокальные циклы Мусоргского, Шумана и др.
-    </p>
+      <button id="burger" class="burger" aria-label="Открыть меню"><div></div></button>
+    </header>
 
-    <div id="bioExtra" style="display:none;">
-        <p>
-Ещё учась на 4 курсе, в 1986 г. дебютировал на сцене театра оперы и балета столицы Марийской АССР г. Йошкар-Ола... (вставлен остальной текст из твоего файла без изменений)
-        </p>
+    <!-- HERO -->
+    <section id="home" class="hero" style="background-image:url('images/bg.jpg')">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <h2>Владислав Калашников — <span style="background:rgba(0,0,0,0.16);padding:3px 8px;border-radius:6px;color:var(--beige)">Баритон</span></h2>
+          <p class="lead"><strong>Путь в искусстве певца, баритона Владислава Калашникова</strong> — это пример стремительного творческого взлёта человека, сначала посвятившего себя другой профессии, а теперь уже ярко и плодотворно служащего оперному искусству, создавая один вдохновенный образ за другим.</p>
+          <a class="cta" href="#audio">Послушать записи</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="columns">
+      <main>
+        <!-- Биография -->
+        <section id="bio" class="card bio" aria-labelledby="bioTitle">
+          <span id="bioTitle" class="section-title">Биография / Автобиография</span>
+
+          <p class="meta">Краткая автобиография и ключевые факты</p>
+
+          <p><span class="highlight">Путь в искусстве певца, баритона Владислава Калашникова</span> — это пример стремительного творческого взлёта человека, сначала посвятившего себя другой профессии, а теперь уже ярко и плодотворно служащего оперному искусству, создавая один вдохновенный образ за другим.</p>
+
+          <p><strong class="date">Родился:</strong> Владислав Михайлович Калашников — <strong>13 января 1951</strong>, село Новокиевский Увал, Амурская область.</p>
+
+          <p>Будучи в зрелом возрасте, имея за плечами более чем 10-летний опыт инженерной профессии, в <strong class="date">1979</strong> году поступает в Благовещенское музыкальное училище и экстерном заканчивает его в <strong class="date">1982</strong> году по классу заслуженного артиста РСФСР Валерия Александровича Побережского.</p>
+
+          <p>В том же <strong class="date">1982</strong> году поступил в Горьковскую государственную консерваторию в класс заслуженного деятеля искусств РСФСР, профессора Евгения Григорьевича Крестинского и успешно окончил её в <strong class="date">1987</strong> году. В консерваторской оперной студии исполнял заглавные партии: <em>Дон Жуан (Моцарт), Дон Паскуале (Доницетти), Мазепа (Чайковский), "Грязной" (из "Царской невесты" Римского-Корсакова), Васков (из "Зори здесь тихие" Молчанова)</em>. В камерном классе исполнял вокальные циклы Мусоргского, Шумана и др.</p>
+
+          <p>Ещё учась на 4 курсе, в <strong class="date">1986</strong> г. дебютировал на сцене театра оперы и балета столицы Марийской АССР (г. Йошкар-Ола) в партии Жермона («Травиата»). Плодотворно работал в этом театре вплоть до <strong class="date">2004</strong> года, создав галерею партий ведущего баритонового репертуара: Риголетто, Фигаро, Онегин, Грязной, Князь Игорь, Жермон, Роберт, Альфио, Валентин, Алеко и др.</p>
+
+          <p>С <strong class="date">1996</strong> года начал сотрудничество с Волгоградской оперной антрепризой (худ. рук. и гл. дирижёр — з. д. и. РСФСР Вадим Венедиктов), где исполнил партию Скарпиа в «Тоске» Пуччини. В <strong class="date">2000</strong> году дебютировал в партии Риголетто на сцене Волгоградского музыкального театра.</p>
+
+          <p>Гастролировал в городах: Москва (сцена ЦДРИ), Новосибирск (Онегин), Казань (Фигаро, Елецкий), Чебоксары, Киров, Улан-Удэ и др. Частый гость на Марийском телевидении; в <strong class="date">2002</strong> году выпущена 2-серийная телепередача с исполнением шедевров мировой оперной классики.</p>
+
+          <p>В <strong class="date">2002</strong> году записал первый сольный CD-альбом популярных арий «<strong>Снова туда, где море огней</strong>» с оркестром театра оперы и балета Республики Марий Эл (дирижёр — Константин Салтыков). В том же году удостоен почётного звания <strong>«Заслуженный артист Республики Марий Эл»</strong>.</p>
+
+          <p>Активно занимается педагогической деятельностью: продолжатель «Школы Крестинского», педагог-репетитор вокала в театре оперы и балета Республики Марий Эл (1992–2002), преподавал в колледже культуры, имеет много учеников.</p>
+
+          <p>В <strong class="date">2004</strong> принят в труппу Бурятского академического театра оперы и балета (г. Улан-Удэ). За полтора сезона 2004–2005 гг. исполнил множество ведущих партий: Фигаро, Риголетто, Онегин, Роберт, Жермон; дебютировал в партиях: Граф ди Луна («Трубадур»), Князь Елецкий («Пиковая дама»), Эскамильо («Кармен»), Верховный жрец («Самсон и Далила»), Веденецкий гость («Садко»).</p>
+
+          <p>В 2004–2005 гг. в театре состоялись оперные премьеры, где он исполнял главные партии: Дон Паскуале (Доницетти), Васков (Молчанова, «Зори здесь тихие»), Кум («Сорочинская ярмарка»).</p>
+
+          <p>Гастролировал с сольным концертом «Поклонимся великим тем годам», выступал совместно с Людмилой Куделиной. В <strong class="date">2005</strong> году дал мастер-класс в Иркутском музыкальном училище и записал второй сольный CD-альбом «<strong>Non ti scordar di me…</strong>».</p>
+        </section>
+
+        <!-- Альбомы -->
+        <section id="albums" class="card" aria-labelledby="albumsTitle">
+          <span id="albumsTitle" class="section-title">Альбомы</span>
+          <div class="meta">Сольные CD-альбомы и записи</div>
+
+          <div class="albums-slider" id="albumsSlider" aria-hidden="false">
+            <div class="slides" id="slidesRow">
+              <div class="slide">
+                <div class="cover" style="background-image:url('images/cover1.jpg')"></div>
+                <div class="alb-title">Снова туда, где море огней (2002)</div>
+              </div>
+
+              <div class="slide">
+                <div class="cover" style="background-image:url('images/cover2.jpg')"></div>
+                <div class="alb-title">Non ti scordar di me… (2005)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slider-controls" aria-hidden="false">
+            <button id="albPrev" class="slider-btn" aria-label="Назад">‹</button>
+            <button id="albNext" class="slider-btn" aria-label="Вперёд">›</button>
+          </div>
+
+          <p style="margin-top:12px;color:var(--muted);font-size:14px">
+            <strong>Информация по альбомам:</strong><br>
+            <em>2002</em> — первый сольный CD «Снова туда, где море огней» (оркестр театра оперы и балета Республики Марий Эл; дирижёр — Константин Салтыков).<br>
+            <em>2005</em> — второй сольный CD «Non ti scordar di me…».
+          </p>
+        </section>
+
+        <!-- Аудиозаписи -->
+        <section id="audio" class="card" aria-labelledby="audioTitle">
+          <span id="audioTitle" class="section-title">Аудиозаписи</span>
+          <div class="meta">Плейлист — кликайте по треку для воспроизведения</div>
+
+          <div class="player" role="region" aria-label="Аудиоплеер">
+            <div class="player-controls">
+              <button id="prevBtn" class="btn" aria-label="Предыдущий трек">⏮</button>
+              <button id="playBtn" class="btn primary" aria-label="Воспроизвести">▶︎</button>
+              <button id="nextBtn" class="btn" aria-label="Следующий трек">⏭</button>
+              <div style="flex:1;margin-left:8px">
+                <input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="Прогресс">
+              </div>
+              <div class="time" id="time">00:00 / 00:00</div>
+            </div>
+
+            <audio id="audioNative" preload="metadata"></audio>
+
+            <ul id="trackList" class="track-list" aria-label="Плейлист">
+              <li class="active" data-src="audio/audio1.mp3" data-title="Снова туда, где море огней">
+                <div class="track-cover" style="background-image:url('images/cover1.jpg')"></div>
+                <div class="track-info">
+                  <div class="title">Снова туда, где море огней</div>
+                  <div class="small">2002 — популярные арии</div>
+                </div>
+              </li>
+              <li data-src="audio/audio2.mp3" data-title="Non ti scordar di me">
+                <div class="track-cover" style="background-image:url('images/cover2.jpg')"></div>
+                <div class="track-info">
+                  <div class="title">Non ti scordar di me</div>
+                  <div class="small">2005 — арии и романсы</div>
+                </div>
+              </li>
+               <li class="active" data-src="audio/audio1.mp3" data-title="Снова туда, где море огней">
+                <div class="track-cover" style="background-image:url('images/cover1.jpg')"></div>
+                <div class="track-info">
+                  <div class="title">Снова туда, где море огней</div>
+                  <div class="small">2002 — популярные арии</div>
+                </div>
+              </li>
+              <li data-src="audio/audio2.mp3" data-title="Non ti scordar di me">
+                <div class="track-cover" style="background-image:url('images/cover2.jpg')"></div>
+                <div class="track-info">
+                  <div class="title">Non ti scordar di me</div>
+                  <div class="small">2005 — арии и романсы</div>
+                </div>
+              </li>
+              <li data-src="audio/audio2.mp3" data-title="Non ti scordar di me">
+                <div class="track-cover" style="background-image:url('images/cover2.jpg')"></div>
+                <div class="track-info">
+                  <div class="title">Ария Князя игоря</div>
+                  <div class="small">2005 — арии и романсы</div>
+                </div>
+              </li>
+              <li data-src="audio/audio2.mp3" data-title="Ария (Дон Паскуале)">
+                <div class="track-cover" style="background-image:url('images/cover-placeholder.jpg')"></div>
+                <div class="track-info">
+                  <div class="title">Ария (Дон Паскуале)</div>
+                  <div class="small">Живая запись / концерт</div>
+                </div>
+              </li>
+            </ul>
+<div class="more-audio"><button id="expandTracks" class="more-btn" aria-expanded="false">▼ Показать больше</button></div>
+          </div>
+        </section>
+
+        <!-- Фотоальбом -->
+        <section id="photos" class="card" aria-labelledby="photosTitle">
+          <span id="photosTitle" class="section-title">Фотоальбом</span>
+          <div class="meta">Подборка сценических и рекламных фото</div>
+          <div class="gallery-grid" style="margin-top:12px">
+           <img src="images/photo1.jpg" alt="Владислав Калашников">
+    <img src="images/photo2.jpg" alt="Выступление">
+    <img src="images/photo3.jpg" alt="Сцена">
+            <img src="images/photo2.jpg" alt="Фото 4">
+            <img src="images/photo2.jpg" alt="Фото 5">
+            <img src="images/photo2.jpg" alt="Фото 6">
+          </div>
+        </section>
+
+        <!-- Репертуар -->
+        <section id="repertoire" class="card" aria-labelledby="repTitle">
+          <span id="repTitle" class="section-title">Репертуар</span>
+          <div class="meta">Избранные партии и роли</div>
+
+          <table class="rep-table" aria-label="Таблица репертуара">
+            <thead>
+              <tr><th class="composer">Автор / Композитор</th><th>Произведение</th><th>Роль</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Риголетто»</td><td class="role">Риголетто</td></tr>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Трубадур»</td><td class="role">Граф ди Луна</td></tr>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Аида»</td><td class="role">Амонaсро</td></tr>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Травиата»</td><td class="role">Жермон</td></tr>
+              <tr><td class="composer">Д. Верди</td><td class="work">«Бал-маскарад»</td><td class="role">Ренато</td></tr>
+
+              <tr><td class="composer">Д. Пуччини</td><td class="work">«Тоска»</td><td class="role">Скарпиа</td></tr>
+              <tr><td class="composer">Д. Пуччини</td><td class="work">«Мадам Баттерфлай»</td><td class="role">Шарплес</td></tr>
+
+              <tr><td class="composer">Д. Россини</td><td class="work">«Севильский цирюльник»</td><td class="role">Фигаро</td></tr>
+
+              <tr><td class="composer">Г. Доницетти</td><td class="work">«Дон Паскуале»</td><td class="role">Дон Паскуале</td></tr>
+
+              <tr><td class="composer">Ш. Гуно</td><td class="work">«Фауст»</td><td class="role">Валентин</td></tr>
+
+              <tr><td class="composer">Ж. Бизе</td><td class="work">«Кармен»</td><td class="role">Эскамильо</td></tr>
+
+              <tr><td class="composer">Р. Леонкавалло</td><td class="work">«Паяцы»</td><td class="role">Тонио</td></tr>
+
+              <tr><td class="composer">К. Сен-Санс</td><td class="work">«Самсон и Далила»</td><td class="role">Верховный Жрец</td></tr>
+
+              <tr><td class="composer">П. Масканьи</td><td class="work">«Сельская честь»</td><td class="role">Альфио</td></tr>
+
+              <tr><td class="composer">П. Чайковский</td><td class="work">«Евгений Онегин»</td><td class="role">Онегин</td></tr>
+              <tr><td class="composer">П. Чайковский</td><td class="work">«Иоланта»</td><td class="role">Роберт Эбн-Хаккия</td></tr>
+              <tr><td class="composer">П. Чайковский</td><td class="work">«Пиковая дама»</td><td class="role">Елецкий / Томский</td></tr>
+
+              <tr><td class="composer">Н. Римский-Корсаков</td><td class="work">«Царская невеста»</td><td class="role">Грязной</td></tr>
+              <tr><td class="composer">Н. Римский-Корсаков</td><td class="work">«Садко»</td><td class="role">Веденецкий гость</td></tr>
+
+              <tr><td class="composer">М. Мусоргский</td><td class="work">«Борис Годунов»</td><td class="role">Щелкалов</td></tr>
+              <tr><td class="composer">М. Мусоргский</td><td class="work">«Сорочинская ярмарка»</td><td class="role">Кум</td></tr>
+
+              <tr><td class="composer">А. Бородин</td><td class="work">«Князь Игорь»</td><td class="role">Князь Игорь</td></tr>
+
+              <tr><td class="composer">С. Рахманинов</td><td class="work">«Алеко»</td><td class="role">Алеко</td></tr>
+
+              <tr><td class="composer">К. Молчанов</td><td class="work">«Зори здесь тихие»</td><td class="role">Васков</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="profile card" style="padding:0;overflow:hidden">
+          <div class="profile-photo" style="background-image:url('images/photo1.jpg')"></div>
+          <div style="padding:16px">
+            <div style="font-weight:700;font-family:Playfair Display">Владислав Калашников</div>
+            <div style="color:var(--muted);font-size:14px;margin-top:6px">Баритон</div>
+            <p style="margin-top:12px;color:var(--dark-brown);font-size:14px"><strong>Кратко:</strong> исполнитель оперного и камерного репертуара, автор сольных программ и записей.</p>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="card contact-card" id="contacts">
+          <div class="section-title" style="font-size:16px">Контакты</div>
+          <p class="meta">Для записи и сотрудничества</p>
+          <p><strong>Email:</strong> <a href="mailto:example@example.com">example@example.com</a></p>
+          <p><strong>Телефон:</strong> +7 (900) 000-00-00</p>
+          <p style="color:var(--muted);font-size:13px;margin-top:8px">Адрес: г. Йошкар-Ола (пример)</p>
+        </div>
+      </aside>
     </div>
 
-    <button id="bioToggle" class="more-btn">▼ Показать больше</button>
-</section>
+    <footer>&copy; <span id="year"></span> Владислав Калашников — все права защищены.</footer>
+  </div>
 
-<section id="audio" class="section audio-section">
-    <h2>Аудиозаписи</h2>
+  <script src="js/script.js"></script>
 
-    <div class="audio-item"><audio controls src="audio/audio1.mp3"></audio></div>
-    <div class="audio-item"><audio controls src="audio/audio2.mp3"></audio></div>
-    <div class="audio-item"><audio controls src="audio/audio3.mp3"></audio></div>
-
-    <div id="audioExtra" style="display:none;">
-        <div class="audio-item"><audio controls src="audio/audio4.mp3"></audio></div>
-        <div class="audio-item"><audio controls src="audio/audio5.mp3"></audio></div>
-        <div class="audio-item"><audio controls src="audio/audio6.mp3"></audio></div>
-    </div>
-
-    <button id="audioToggle" class="more-btn">▼ Показать больше</button>
-</section>
-
-<section id="gallery" class="section gallery-section">
-    <h2>Фотоальбом</h2>
-
-    <div class="gallery">
-        <img src="images/photo1.jpg" class="gallery-img">
-        <img src="images/photo2.jpg" class="gallery-img">
-        <img src="images/photo3.jpg" class="gallery-img">
-        <img src="images/photo4.jpg" class="gallery-img">
-        <img src="images/photo5.jpg" class="gallery-img">
-        <img src="images/photo6.jpg" class="gallery-img">
-    </div>
-</section>
-
-<div id="viewer" class="viewer">
-    <img id="viewerImg">
-    <div id="viewerPrev" class="viewer-btn viewer-prev">❮</div>
-    <div id="viewerNext" class="viewer-btn viewer-next">❯</div>
-    <div id="viewerClose" class="viewer-btn viewer-close">✕</div>
-</div>
-
-<footer id="contacts" class="footer">
-    <p>Контакты: email@example.com</p>
-</footer>
-
-<script src="script.js"></script>
+  <!-- Fullscreen gallery viewer -->
+  <div id="viewer" class="viewer" aria-hidden="true" role="dialog" aria-label="Просмотр фотографий">
+    <button id="viewerClose" class="viewer-btn viewer-close" aria-label="Закрыть">✕</button>
+    <button id="viewerPrev" class="viewer-btn viewer-prev" aria-label="Предыдущая фотография">❮</button>
+    <img id="viewerImg" src="" alt="Просмотр фото">
+    <button id="viewerNext" class="viewer-btn viewer-next" aria-label="Следующая фотография">❯</button>
+  </div>
 
 </body>
 </html>
