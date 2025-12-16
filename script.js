@@ -1,326 +1,236 @@
-// MOBILE MENU
-const burgerBtn = document.getElementById("burgerBtn");
-const mobileMenu = document.getElementById("mobileMenu");
+// Обновление года в футере
+document.getElementById('year').textContent = new Date().getFullYear();
 
-burgerBtn.onclick = () => {
-    mobileMenu.style.display = mobileMenu.style.display === "flex" ? "none" : "flex";
-};
+// Мобильное меню
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+const closeMobile = document.getElementById('closeMobile');
 
-// BIO ACCORDION
-const bioBtn = document.getElementById("bioToggle");
-const bioExtra = document.getElementById("bioExtra");
+burger.addEventListener('click', () => {
+    mobileMenu.setAttribute('aria-hidden', 'false');
+});
 
-if (bioBtn) {
-    bioBtn.onclick = () => {
-        if (bioExtra.style.display === "none") {
-            bioExtra.style.display = "block";
-            bioBtn.textContent = "▲ Показать меньше";
-        } else {
-            bioExtra.style.display = "none";
-            bioBtn.textContent = "▼ Показать больше";
-        }
-    };
+closeMobile.addEventListener('click', () => {
+    mobileMenu.setAttribute('aria-hidden', 'true');
+});
+
+// Навигация по ссылкам
+document.querySelectorAll('[data-link]').forEach(link => {
+    link.addEventListener('click', (e) => {
+        // Убрать активный класс со всех ссылок
+        document.querySelectorAll('[data-link]').forEach(l => {
+            l.classList.remove('active');
+        });
+        
+        // Добавить активный класс текущей ссылке
+        e.target.classList.add('active');
+        
+        // Закрыть мобильное меню
+        mobileMenu.setAttribute('aria-hidden', 'true');
+    });
+});
+
+// Аудиоплеер
+const audio = document.getElementById('audioNative');
+const playBtn = document.getElementById('playBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const progress = document.getElementById('progress');
+const timeDisplay = document.getElementById('time');
+const trackList = document.getElementById('trackList');
+
+let currentTrack = 0;
+const tracks = Array.from(trackList.children);
+
+// Форматирование времени
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-// AUDIO ACCORDION
-const audioBtn = document.getElementById("audioToggle");
-const audioExtra = document.getElementById("audioExtra");
-
-if (audioBtn) {
-    audioBtn.onclick = () => {
-        if (audioExtra.style.display === "none") {
-            audioExtra.style.display = "block";
-            audioBtn.textContent = "▲ Показать меньше";
-        } else {
-            audioExtra.style.display = "none";
-            audioBtn.textContent = "▼ Показать больше";
-        }
-    };
+// Обновление прогресса
+function updateProgress() {
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progress.value = percent;
+    
+    timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
 }
 
-// GALLERY VIEWER
-const images = document.querySelectorAll(".gallery-img");
-const viewer = document.getElementById("viewer");
-const viewerImg = document.getElementById("viewerImg");
-const prev = document.getElementById("viewerPrev");
-const next = document.getElementById("viewerNext");
-const closeBtn = document.getElementById("viewerClose");
+// Загрузка трека
+function loadTrack(index) {
+    const track = tracks[index];
+    const src = track.dataset.src;
+    const title = track.dataset.title;
+    
+    audio.src = src;
+    audio.load();
+    
+    // Обновить активный трек
+    tracks.forEach(t => t.classList.remove('active'));
+    track.classList.add('active');
+    
+    // Обновить заголовок (если есть элемент для этого)
+    const titleElement = document.querySelector('.current-track-title');
+    if (titleElement) {
+        titleElement.textContent = title;
+    }
+}
 
-let currentIndex = 0;
+// Воспроизведение/пауза
+playBtn.addEventListener('click', () => {
+    if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸';
+    } else {
+        audio.pause();
+        playBtn.textContent = '▶︎';
+    }
+});
 
-images.forEach((img, index) => {
-    img.onclick = () => {
-        currentIndex = index;
+// Следующий трек
+nextBtn.addEventListener('click', () => {
+    currentTrack = (currentTrack + 1) % tracks.length;
+    loadTrack(currentTrack);
+    audio.play();
+    playBtn.textContent = '⏸';
+});
+
+// Предыдущий трек
+prevBtn.addEventListener('click', () => {
+    currentTrack = currentTrack === 0 ? tracks.length - 1 : currentTrack - 1;
+    loadTrack(currentTrack);
+    audio.play();
+    playBtn.textContent = '⏸';
+});
+
+// Клик по треку в плейлисте
+tracks.forEach((track, index) => {
+    track.addEventListener('click', () => {
+        currentTrack = index;
+        loadTrack(currentTrack);
+        audio.play();
+        playBtn.textContent = '⏸';
+    });
+});
+
+// Обновление прогресса
+audio.addEventListener('timeupdate', updateProgress);
+
+// Перемотка
+progress.addEventListener('input', () => {
+    const time = (progress.value / 100) * audio.duration;
+    audio.currentTime = time;
+});
+
+// Когда трек загружен
+audio.addEventListener('loadedmetadata', () => {
+    timeDisplay.textContent = `00:00 / ${formatTime(audio.duration)}`;
+});
+
+// Когда трек закончился
+audio.addEventListener('ended', () => {
+    nextBtn.click();
+});
+
+// Галерея фото
+const galleryImages = document.querySelectorAll('.gallery-grid img');
+const viewer = document.getElementById('viewer');
+const viewerImg = document.getElementById('viewerImg');
+const viewerClose = document.getElementById('viewerClose');
+const viewerPrev = document.getElementById('viewerPrev');
+const viewerNext = document.getElementById('viewerNext');
+
+let currentImageIndex = 0;
+
+// Открытие просмотрщика
+galleryImages.forEach((img, index) => {
+    img.addEventListener('click', () => {
+        currentImageIndex = index;
         viewerImg.src = img.src;
-        viewer.style.display = "flex";
-    };
+        viewer.setAttribute('aria-hidden', 'false');
+    });
 });
 
-closeBtn.onclick = () => viewer.style.display = "none";
-
-prev.onclick = () => {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    viewerImg.src = images[currentIndex].src;
-};
-
-next.onclick = () => {
-    currentIndex = (currentIndex + 1) % images.length;
-    viewerImg.src = images[currentIndex].src;
-};
-
-// Close on click outside
-viewer.onclick = (e) => {
-    if (e.target === viewer) viewer.style.display = "none";
-};
-
-
-
-
-
-
-/* Original scripts extracted from uploaded file (if any) 
-
-/* Year */
-/*    document.getElementById('year').textContent = new Date().getFullYear();
-
-    /* Mobile menu open/close */
-  /*  const burger = document.getElementById('burger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const closeMobile = document.getElementById('closeMobile');
-
-    burger.addEventListener('click', () => {
-      mobileMenu.style.display = 'block';
-      mobileMenu.setAttribute('aria-hidden','false');
-    });
-    closeMobile.addEventListener('click', () => {
-      mobileMenu.style.display = 'none';
-      mobileMenu.setAttribute('aria-hidden','true');
-    });
-    mobileMenu.addEventListener('click', (e) => {
-      if (e.target === mobileMenu) {
-        mobileMenu.style.display = 'none';
-        mobileMenu.setAttribute('aria-hidden','true');
-      }
-    });
-
-    /* Smooth scroll and active link handling (desktop + mobile) */
-   /* document.querySelectorAll('[data-link]').forEach(a=>{
-      a.addEventListener('click', (e)=>{
-        e.preventDefault();
-        const href = a.getAttribute('href');
-        const target = document.querySelector(href);
-        if (target) target.scrollIntoView({behavior:'smooth',block:'start'});
-        document.querySelectorAll('[data-link]').forEach(x=>x.classList.remove('active'));
-        a.classList.add('active');
-        // also update desktop topnav
-        document.querySelectorAll('nav.topnav a').forEach(x=>x.classList.remove('active'));
-        const top = document.querySelector(`nav.topnav a[href="${href}"]`);
-        if (top) top.classList.add('active');
-        if (mobileMenu.style.display === 'block') mobileMenu.style.display = 'none';
-      });
-    });
-
-    /* Albums slider logic */
-/*    (function(){
-      const slider = document.getElementById('albumsSlider');
-      const slidesRow = document.getElementById('slidesRow');
-      const prev = document.getElementById('albPrev');
-      const next = document.getElementById('albNext');
-      let idx = 0;
-
-      function update() {
-        const slide = slider.querySelector('.slide');
-        if (!slide) return;
-        const gap = 14;
-        const w = slide.offsetWidth + gap;
-        slidesRow.style.transform = `translateX(${-idx * w}px)`;
-      }
-      prev.addEventListener('click', ()=>{
-        idx = Math.max(0, idx - 1);
-        update();
-      });
-      next.addEventListener('click', ()=>{
-        const max = slidesRow.children.length - Math.floor((slider.offsetWidth) / (slider.querySelector('.slide').offsetWidth + 14));
-        idx = Math.min(max, idx + 1);
-        update();
-      });
-      window.addEventListener('resize', update);
-      // initial
-      setTimeout(update, 100);
-    })();
-
-    /* Audio player */
-/*    (function(){
-      const audio = document.getElementById('audioNative');
-      const playBtn = document.getElementById('playBtn');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const progress = document.getElementById('progress');
-      const timeLabel = document.getElementById('time');
-      const trackEls = Array.from(document.querySelectorAll('#trackList li'));
-
-      let current = 0;
-
-      function setTrack(i, autoplay=false){
-        if (i < 0) i = trackEls.length - 1;
-        if (i >= trackEls.length) i = 0;
-        current = i;
-        trackEls.forEach(t=>t.classList.remove('active'));
-        const el = trackEls[current];
-        el.classList.add('active');
-        audio.src = el.dataset.src;
-        audio.load();
-        if (autoplay) audio.play().catch(()=>{});
-        updatePlayBtn(!audio.paused && !audio.ended);
-      }
-
-      function updatePlayBtn(isPlaying){
-        playBtn.textContent = isPlaying ? '⏸' : '▶︎';
-        if (isPlaying) playBtn.classList.add('primary'); else playBtn.classList.remove('primary');
-      }
-
-      // init first
-      setTrack(0,false);
-
-      playBtn.addEventListener('click', ()=>{
-        if (audio.paused) audio.play(); else audio.pause();
-      });
-      audio.addEventListener('play', ()=>updatePlayBtn(true));
-      audio.addEventListener('pause', ()=>updatePlayBtn(false));
-
-      prevBtn.addEventListener('click', ()=>setTrack(current - 1, true));
-      nextBtn.addEventListener('click', ()=>setTrack(current + 1, true));
-
-      trackEls.forEach((t, i)=> t.addEventListener('click', ()=> setTrack(i, true)));
-
-      audio.addEventListener('timeupdate', ()=>{
-        if (audio.duration) {
-          const pct = (audio.currentTime / audio.duration) * 100;
-          progress.value = pct;
-          updateTime();
-        }
-      });
-      progress.addEventListener('input', (e)=>{
-        if (audio.duration) audio.currentTime = (e.target.value / 100) * audio.duration;
-      });
-      audio.addEventListener('ended', ()=> setTrack(current + 1, true));
-
-      function updateTime(){
-        const fmt = (s)=>{
-          if (!s || isNaN(s)) return '00:00';
-          const m = Math.floor(s/60), sec = Math.floor(s%60);
-          return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-        };
-        timeLabel.textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
-      }
-      audio.addEventListener('loadedmetadata', updateTime);
-      // keyboard accessibility
-      document.addEventListener('keydown', (e)=>{
-        if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT') {
-          e.preventDefault();
-          if (audio.paused) audio.play(); else audio.pause();
-        }
-        if (e.code === 'ArrowRight') audio.currentTime = Math.min(audio.duration||0, audio.currentTime + 5);
-        if (e.code === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - 5);
-      });
-    })();
-
-/* Additional scripts for accordion and viewer */
-
-/* ===== Audio accordion behavior ===== */
-/*      document.addEventListener('DOMContentLoaded', function(){
-  let tracks = Array.from(document.querySelectorAll('#trackList li'));
-  if(tracks.length === 0){
-    tracks = Array.from(document.querySelectorAll('.audio-list li, .track-list li'));
-  }
-  tracks.forEach((li,i)=>{
-    li.classList.remove('track-hidden','track-visible');
-    if(i >= 3) li.classList.add('track-hidden');
-    else li.classList.add('track-visible');
-  });
-
-  const expandBtn = document.getElementById('expandTracks');
-  if(expandBtn){
-    expandBtn.addEventListener('click', function(){
-      const isExpanded = expandBtn.getAttribute('aria-expanded') === 'true';
-      tracks.forEach((li,i)=>{
-        if(i >= 3){
-          if(isExpanded){
-            li.classList.remove('track-visible');
-            li.classList.add('track-hidden');
-          } else {
-            li.classList.remove('track-hidden');
-            li.classList.add('track-visible');
-          }
-        }
-      });
-      expandBtn.setAttribute('aria-expanded', String(!isExpanded));
-      expandBtn.textContent = isExpanded ? '▼ Показать больше' : '▲ Показать меньше';
-    });
-  }
-
-  /* ===== Fullscreen gallery viewer ===== */
-/*  const galleryImgs = Array.from(document.querySelectorAll('#photos img, .gallery img, .gallery-grid img'));
-  const viewer = document.getElementById('viewer');
-  const viewerImg = document.getElementById('viewerImg');
-  const prevBtn = document.getElementById('viewerPrev');
-  const nextBtn = document.getElementById('viewerNext');
-  const closeBtn = document.getElementById('viewerClose');
-  let idx = 0;
-
-  function openViewer(i){
-    idx = i;
-    viewerImg.src = galleryImgs[i].src;
-    viewer.classList.add('active');
-    viewer.setAttribute('aria-hidden','false');
-  }
-  function closeViewer(){
-    viewer.classList.remove('active');
-    viewer.setAttribute('aria-hidden','true');
-  }
-  function showNext(n){
-    idx = (idx + n + galleryImgs.length) % galleryImgs.length;
-    viewerImg.src = galleryImgs[idx].src;
-  }
-
-  galleryImgs.forEach((img, i)=>{
-    img.style.cursor = 'zoom-in';
-    img.addEventListener('click', ()=> openViewer(i));
-    let touchStartX = 0;
-    img.addEventListener('touchstart', function(e){ touchStartX = e.changedTouches[0].screenX; }, {passive:true});
-    img.addEventListener('touchend', function(e){
-      const dx = e.changedTouches[0].screenX - touchStartX;
-      if(Math.abs(dx) > 40){
-        if(dx < 0) openViewer((i+1)%galleryImgs.length); else openViewer((i-1+galleryImgs.length)%galleryImgs.length);
-      }
-    }, {passive:true});
-  });
-
-  if(prevBtn) prevBtn.addEventListener('click', ()=> showNext(-1));
-  if(nextBtn) nextBtn.addEventListener('click', ()=> showNext(1));
-  if(closeBtn) closeBtn.addEventListener('click', closeViewer);
-
-  document.addEventListener('keydown', function(e){
-    if(!viewer.classList.contains('active')) return;
-    if(e.key === 'ArrowRight') showNext(1);  
-    if(e.key === 'ArrowLeft') showNext(-1);
-    if(e.key === 'Escape') closeViewer();
-  });
-
-  viewer.addEventListener('click', function(e){
-    if(e.target === viewer) closeViewer();
-  });
+// Закрытие просмотрщика
+viewerClose.addEventListener('click', () => {
+    viewer.setAttribute('aria-hidden', 'true');
 });
 
-// bio accordion
-document.addEventListener('DOMContentLoaded', ()=>{
- let btn=document.getElementById('bioToggle');
- if(btn){
-   btn.onclick=()=>{
-     let b=document.getElementById('bioExtra');
-     if(b.style.display==='none'){b.style.display='block'; btn.textContent='▲ Показать меньше';}
-     else{b.style.display='none'; btn.textContent='▼ Показать больше';}
-   };
- }
+// Предыдущее фото
+viewerPrev.addEventListener('click', () => {
+    currentImageIndex = currentImageIndex === 0 ? galleryImages.length - 1 : currentImageIndex - 1;
+    viewerImg.src = galleryImages[currentImageIndex].src;
 });
 
+// Следующее фото
+viewerNext.addEventListener('click', () => {
+    currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+    viewerImg.src = galleryImages[currentImageIndex].src;
+});
+
+// Закрытие по клику вне изображения
+viewer.addEventListener('click', (e) => {
+    if (e.target === viewer) {
+        viewer.setAttribute('aria-hidden', 'true');
+    }
+});
+
+// Клавиши для навигации в галерее
+document.addEventListener('keydown', (e) => {
+    if (viewer.getAttribute('aria-hidden') === 'false') {
+        if (e.key === 'Escape') {
+            viewer.setAttribute('aria-hidden', 'true');
+        } else if (e.key === 'ArrowLeft') {
+            viewerPrev.click();
+        } else if (e.key === 'ArrowRight') {
+            viewerNext.click();
+        }
+    }
+});
+
+// Раскрытие всех треков
+const expandTracks = document.getElementById('expandTracks');
+if (expandTracks) {
+    expandTracks.addEventListener('click', () => {
+        const isExpanded = expandTracks.getAttribute('aria-expanded') === 'true';
+        expandTracks.setAttribute('aria-expanded', !isExpanded);
+        expandTracks.textContent = isExpanded ? '▼ Показать больше' : '▲ Скрыть';
+        
+        // Здесь можно добавить логику для показа/скрытия треков
+        const hiddenTracks = document.querySelectorAll('.track-list li:not(:nth-child(-n+4))');
+        hiddenTracks.forEach(track => {
+            track.style.display = isExpanded ? 'none' : 'flex';
+        });
+    });
+}
+
+// Слайдер альбомов
+const albumsSlider = document.getElementById('albumsSlider');
+const slidesRow = document.getElementById('slidesRow');
+const albPrev = document.getElementById('albPrev');
+const albNext = document.getElementById('albNext');
+
+if (albumsSlider && slidesRow) {
+    let slideIndex = 0;
+    const slides = slidesRow.querySelectorAll('.slide');
+    const slideWidth = slides[0]?.offsetWidth + 20 || 220; // ширина слайда + отступ
+    
+    function updateSlider() {
+        slidesRow.style.transform = `translateX(-${slideIndex * slideWidth}px)`;
+    }
+    
+    albNext.addEventListener('click', () => {
+        if (slideIndex < slides.length - 1) {
+            slideIndex++;
+            updateSlider();
+        }
+    });
+    
+    albPrev.addEventListener('click', () => {
+        if (slideIndex > 0) {
+            slideIndex--;
+            updateSlider();
+        }
+    });
+}
