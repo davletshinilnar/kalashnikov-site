@@ -111,7 +111,7 @@ p {
   border-radius: 2px;
 }
 
-/* Hero section - упрощенный вариант */
+/* Hero section - самый простой вариант */
 .hero {
   width: 100%;
   height: 500px;
@@ -125,47 +125,21 @@ p {
   position: relative;
 }
 
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.3);
-}
-
-.hero-inner {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  padding: 0 20px;
-}
-
-.hero-text {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 30px;
-  max-width: 600px;
-  margin: 0 auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  margin-left: 50px;
-}
-
-/* Mobile hero fix */
+/* Mobile hero */
 @media (max-width: 768px) {
   .hero {
     height: 350px;
     margin: 20px 0;
     border-radius: 0;
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
   }
   
   .hero-text {
-    margin: 15px;
-    padding: 20px;
-    max-width: none;
+    margin: 15px !important;
+    max-width: none !important;
   }
 }
 
@@ -173,16 +147,9 @@ p {
   .hero {
     height: 300px;
     margin: 15px 0;
-    border-radius: 0;
-    width: 100vw;
-    margin-left: 0;
-  }
-  
-  .hero-text {
-    margin: 10px;
-    padding: 15px;
   }
 }
+
 
 
 /* Columns layout */
