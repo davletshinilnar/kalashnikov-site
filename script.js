@@ -149,12 +149,17 @@ galleryImages.forEach((img, index) => {
         currentImageIndex = index;
         viewerImg.src = img.src;
         viewer.setAttribute('aria-hidden', 'false');
+        // Также добавим класс для плавного появления
+        viewer.style.opacity = '1';
+        viewer.style.visibility = 'visible';
     });
 });
 
 // Закрытие просмотрщика
 viewerClose.addEventListener('click', () => {
     viewer.setAttribute('aria-hidden', 'true');
+    viewer.style.opacity = '0';
+    viewer.style.visibility = 'hidden';
 });
 
 // Предыдущее фото
@@ -173,6 +178,8 @@ viewerNext.addEventListener('click', () => {
 viewer.addEventListener('click', (e) => {
     if (e.target === viewer) {
         viewer.setAttribute('aria-hidden', 'true');
+        viewer.style.opacity = '0';
+        viewer.style.visibility = 'hidden';
     }
 });
 
@@ -181,6 +188,8 @@ document.addEventListener('keydown', (e) => {
     if (viewer.getAttribute('aria-hidden') === 'false') {
         if (e.key === 'Escape') {
             viewer.setAttribute('aria-hidden', 'true');
+            viewer.style.opacity = '0';
+            viewer.style.visibility = 'hidden';
         } else if (e.key === 'ArrowLeft') {
             viewerPrev.click();
         } else if (e.key === 'ArrowRight') {
@@ -188,6 +197,7 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
 
 // Раскрытие всех треков
 const expandTracks = document.getElementById('expandTracks');
